@@ -1,51 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nat/yama — under construction</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>nat/yama — under construction</title>
+
+<style>
+  html, body {
+    margin: 0;
+    height: 200vh;
+    transition: background 2s ease;
+    font-family: serif;
+  }
+
+  /* 溶けるテキスト層 */
+  .text {
+    position: fixed;
+    inset: 0;
+    padding: 4rem;
+    pointer-events: none;
+    transition: opacity 0.6s ease, filter 0.6s ease;
+    color: rgba(60, 60, 60, 0.55);
+    font-size: 1.5rem;
+    line-height: 1.55;
+  }
+
+  .lang {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .lang.active {
+    opacity: 1;
+  }
+
+  .studio {
+    display: block;
+    margin-bottom: 3.5rem;
+    font-size: 1.1rem;
+    opacity: 0.45;
+    letter-spacing: 0.02em;
+  }
+
+  /* UI */
+  .ui {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    color: rgba(60,60,60,0.6);
+  }
+
+  .ui span {
+    cursor: pointer;
+    opacity: 0.4;
+  }
+
+  .ui span:hover {
+    opacity: 1;
+  }
+
+  /* mobile */
+  @media (max-width: 768px) {
+    .text {
+      padding: 2rem 1.5rem;
+      font-size: 1.6rem;
+    }
+
+    .studio {
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .ui {
+      bottom: 1.5rem;
+      right: 1.5rem;
+      font-size: 12px;
+    }
+  }
+</style>
 </head>
+
 <body>
 
-  <div class="bg"></div>
+<div class="text" id="text">
+  <span class="studio">nat/yama — under construction</span>
 
-  <div class="text" id="text">
-    <span class="studio">nat/yama — under construction</span>
+  <p class="lang en active">
+    Berlin-based designer<br>
+    for cultural projects
+  </p>
+  <p class="lang ja">
+    nat/yama はコンセプト設計から表現まで手がける<br>
+    アートディレクターです
+  </p>
+  <p class="lang de">
+    Kultur- und Mediengestalterin<br>
+    für Bildungs- und Kontextprojekte
+  </p>
+</div>
 
-    <p class="lang en active">
-      Berlin-based freelance graphic designer,<br>
-      working on visual and content production
-    </p>
+<div class="ui">
+  <span data-lang="en">EN</span> |
+  <span data-lang="ja">JP</span> |
+  <span data-lang="de">DE</span>
+</div>
 
-    <p class="lang ja">
-      フリーランスのアートディレクターとして、<br>
-      リサーチや企画編集を軸に、<br>
-      コンセプト設計から表現までを手がけています
-    </p>
+<script>
+  const langs = document.querySelectorAll('.lang');
+  const text = document.getElementById('text');
+  const buttons = document.querySelectorAll('.ui span');
 
-    <p class="lang de">
-      Freelance Grafikdesignerin in Berlin,<br>
-      mit Fokus auf visuelle Umsetzung und Produktion
-    </p>
-  </div>
+  // 言語ごとの淡いグラデーションカラー配列
+  const bgGradients = {
+    en: ['#e0f0ff', '#cce6ff', '#b3dbff'], // 青系
+    ja: ['#fff7e6', '#fff0cc', '#ffe6b3'], // オレンジ〜黄系
+    de: ['#f0fff0', '#dfffe0', '#cce6cc']  // 緑系
+  };
 
-  <div class="ui">
-    <span data-lang="en">EN</span> |
-    <span data-lang="ja">JP</span> |
-    <span data-lang="de">DE</span>
-  </div>
+  let currentLang = navigator.language.startsWith('ja') ? 'ja' :
+                    navigator.language.startsWith('de') ? 'de' : 'en';
 
-  <script src="script.js"></script>
+  // 言語切替関数
+  function setLang(lang) {
+    langs.forEach(l => l.classList.remove('active'));
+    document.querySelector('.lang.' + lang).classList.add('active');
+    currentLang = lang;
+    text.style.opacity = 1;
+    text.style.filter = 'blur(0px)';
+  }
+
+  buttons.forEach(b => {
+    b.onclick = () => setLang(b.dataset.lang);
+  });
+
+  // 背景グラデーションアニメーション
+  let gradientIndex = 0;
+  function animateGradient() {
+    const colors = bgGradients[currentLang];
+    const nextIndex = (gradientIndex + 1) % colors.length;
+    const color1 = colors[gradientIndex];
+    const color2 = colors[nextIndex];
+
+    document.body.style.background = `linear-gradient(135deg, ${color1}, ${color2})`;
+
+    gradientIndex = nextIndex;
+    setTimeout(animateGradient, 6000); // 6秒ごとに切り替え
+  }
+
+  setLang(currentLang);
+  animateGradient();
+
+  // スクロールでテキストが溶けるエフェクト
+  window.addEventListener('scroll', () => {
+    const t = Math.min(scrollY / 400, 1);
+    text.style.opacity = 1 - t;
+    text.style.filter = `blur(${t * 6}px)`;
+  });
+</script>
+
 </body>
-<body>
-  <div class="bg" id="bg"></div>
-
-  <div class="text" id="text">
-    <!-- 既存テキストそのまま -->
-  </div>
-
-  <div class="ui">…</div>
-</body>
-  </html>
-
+</html>
