@@ -92,3 +92,14 @@ html, body {
     font-size: 12px;
   }
 }
+/* ===== 背景グラデーション：動き ===== */
+.bg {
+  animation: bgMove 90s ease-in-out infinite;
+}
+
+@keyframes bgMove {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
