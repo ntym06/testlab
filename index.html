@@ -1,85 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Floating GIF Demo</title>
 <style>
-  html, body {
-    margin: 0;
-    height: 200vh;
-    font-family: Georgia, serif;
-    background: linear-gradient(120deg, #f6f4ef, #e9edf1, #f3ede8);
-    background-size: 300% 300%;
-    animation: bgFlow 60s linear infinite;
-  }
+/* --------------------
+   Reset
+-------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-  @keyframes bgFlow {
-    0% { background-position:0% 50%; }
-    50% { background-position:100% 50%; }
-    100% { background-position:0% 50%; }
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 200vh;
+  font-family: Georgia, serif;
+  background: linear-gradient(120deg, #f6f4ef, #e9edf1, #f3ede8);
+  background-size: 300% 300%;
+  animation: bgFlow 60s linear infinite;
+}
 
-  .text {
-    position: fixed;
-    top: 2rem;
-    left: 2rem;
-    max-width: 300px;
-    z-index: 1;
-  }
+/* --------------------
+   Background animation
+-------------------- */
+@keyframes bgFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
-  .ui {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    font-size: 18px;
-    letter-spacing: 0.18em;
-    color: rgba(60,60,60,0.65);
-    z-index: 5;
-  }
+/* --------------------
+   Text block
+-------------------- */
+.text {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  max-width: 300px;
+  z-index: 1;
+}
 
-  .mail-gif {
-    position: absolute;
-    pointer-events: auto;
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-    transition: opacity 2.5s ease, transform 2.5s ease;
-    z-index: 4;
-  }
+/* --------------------
+   Language UI
+-------------------- */
+.ui {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 5;
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  color: rgba(60,60,60,0.65);
+}
 
-  .mail-gif.is-visible {
-    opacity: 0.6;
-    transform: translateY(0) scale(1);
-  }
+/* --------------------
+   Floating GIF
+-------------------- */
+.mail-gif {
+  position: absolute;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: opacity 2.5s ease, transform 2.5s ease;
+  z-index: 4;
+}
 
-  /* PCサイズ */
+.mail-gif.is-visible {
+  opacity: 0.6;
+  transform: translateY(0) scale(1);
+}
+
+/* PCサイズ */
+.mail-gif img {
+  width: 420px;
+  max-width: 70vw;
+  height: auto;
+  display: block;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
   .mail-gif img {
-    width: 420px;
-    max-width: 70vw;
+    width: 40vw;
+    max-width: 150px;
     height: auto;
-    display: block;
   }
-
-  /* モバイル */
-  @media (max-width: 768px) {
-    .mail-gif img {
-      width: 40vw;
-      max-width: 150px;
-      height: auto;
-    }
-
-    .ui {
-      font-size: 15px;
-      bottom: 1.8rem;
-      right: 1.5rem;
-    }
+  .ui {
+    font-size: 15px;
+    bottom: 1.8rem;
+    right: 1.5rem;
   }
+}
 </style>
 </head>
 <body>
 
 <div class="text">
-  <p>ここは文章ブロックです。GIFはここに重ならないようにします。</p>
+  <p>ここは文章ブロックです。GIFはここに重ならないように表示されます。</p>
 </div>
 
 <div class="ui">EN | JP | DE</div>
@@ -89,36 +110,35 @@
 </a>
 
 <script>
+// --------------------
+// ランダム配置関数
+// --------------------
 const mailGif = document.querySelector('.mail-gif');
 
-/* ランダム位置（文字ブロックを避ける） */
 function randomPosition(el) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-
   const rect = el.getBoundingClientRect();
-  const w = rect.width || 300;
-  const h = rect.height || 300;
+  const w = rect.width;
+  const h = rect.height;
 
-  // 安全領域（左上のテキストを避ける）
-  const safeLeft = 0;
-  const safeTop = 100;  // pxで簡易
-  const safeWidth = 320;
-  const safeHeight = 150;
+  // 安全領域を%で設定（左上テキストを避ける）
+  const safeX = vw * 0.2;  // 左20%避ける
+  const safeY = vh * 0.15; // 上15%避ける
 
-  const minX = safeLeft + safeWidth;
-  const minY = safeTop + safeHeight;
-  const maxX = Math.max(minX, vw - w);
-  const maxY = Math.max(minY, vh - h);
+  const maxX = vw - w;
+  const maxY = vh - h;
 
-  const x = minX + Math.random() * (maxX - minX);
-  const y = minY + Math.random() * (maxY - minY);
+  const x = safeX + Math.random() * (maxX - safeX);
+  const y = safeY + Math.random() * (maxY - safeY);
 
   el.style.left = `${x}px`;
   el.style.top = `${y}px`;
 }
 
-/* フェードアウト→再配置→フェードイン */
+// --------------------
+// フェードアウト→再配置→フェードイン
+// --------------------
 function floatGif(el, interval=10000) {
   setInterval(() => {
     el.classList.remove('is-visible'); // フェードアウト
@@ -129,6 +149,9 @@ function floatGif(el, interval=10000) {
   }, interval);
 }
 
+// --------------------
+// 初期化
+// --------------------
 window.addEventListener('DOMContentLoaded', () => {
   randomPosition(mailGif);
 
@@ -139,6 +162,9 @@ window.addEventListener('DOMContentLoaded', () => {
   floatGif(mailGif, 11000);
 });
 
+// --------------------
+// リサイズ時も再配置
+// --------------------
 window.addEventListener('resize', () => randomPosition(mailGif));
 </script>
 
