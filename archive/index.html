@@ -1,1 +1,27 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Archive</title>
+
+  <!-- archive専用CSS -->
+  <link rel="stylesheet" href="./archive.css" />
+</head>
+<body>
+
+  <!-- ジャンル別一覧がここに入る -->
+  <main id="index" class="index"></main>
+
+  <!-- タイトルホバー用プレビュー（1つだけ） -->
+  <div id="hoverPreview"></div>
+
+  <!-- CSVパース用（必須） -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+  <!-- archive専用JS -->
+  <script src="./archive.js"></script>
+
+</body>
+</html>
