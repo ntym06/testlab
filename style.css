@@ -129,12 +129,13 @@ h1 {
 }
 
 /* サイズ制御（モバイルで縮みすぎない） */
-@media (max-width: 768px) {
-  .mail-gif img {
-    width: 100px;
-    max-width: 55vw;
-  }
+.mail-gif img {
+  width: 420px;
+  max-width: 70vw;
+  height: auto;
+  display: block;
 }
+
 
 
 /* --------------------
@@ -147,6 +148,13 @@ h1 {
     right: 1.5rem;
   }
 }
+@media (max-width: 768px) {
+  .mail-gif img {
+    width: 50vw;      /* ← 画面幅の半分 */
+    max-width: 50vw; /* ← 念のため同じに */
+  }
+}
+
 
 
 
