@@ -238,6 +238,57 @@ window.addEventListener('scroll',()=>{
 
 window.addEventListener('resize',()=>randomPosition(mailGif));
 </script>
+<script>
+const bgGradients = {
+  en: ['#e0f0ff','#cce6ff','#BCEFFD'],
+  ja: ['#fff7e6','#fff0cc','#ffe6b3'],
+  de: ['#f0fff0','#dfffe0','#cce6cc']
+};
+
+let currentLang = 'en';
+let progress = 0;
+let index = 0;
+
+// HEX→RGB簡易
+function hexToRgb(h){
+  return h.match(/\w\w/g).map(x=>parseInt(x,16));
+}
+
+// RGB→HEX簡易
+function rgbToHex(r,g,b){
+  return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+
+// 補間
+function lerp(a,b,t){ return a+(b-a)*t; }
+
+function animate(){
+  const colors = bgGradients[currentLang];
+  const c1 = hexToRgb(colors[index]);
+  const c2 = hexToRgb(colors[(index+1)%colors.length]);
+  const rgb = c1.map((v,i)=>lerp(v,c2[i],progress));
+
+  document.body.style.background = `linear-gradient(135deg, ${rgbToHex(...rgb)}, ${rgbToHex(...rgb)})`;
+
+  progress += 0.002; // ←速度調整
+  if(progress >= 1){
+    progress = 0;
+    index = (index+1)%colors.length;
+  }
+
+  requestAnimationFrame(animate);
+}
+
+// 言語切替
+function setLang(lang){
+  currentLang = lang;
+  index = 0;
+  progress = 0;
+}
+
+// 初期化
+animate();
+</script>
 
 </body>
 </html>
