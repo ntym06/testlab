@@ -159,24 +159,56 @@ h1 {
    Bottom image — scroll driven
 ==================== */
 
+/* ====================
+   Bottom image base
+==================== */
+
 #bottom-sticky {
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100vw;
+  overflow: hidden;
 
-  transform: translateY(100%); /* 最初は画面外 */
+  transform: translateY(0);
   will-change: transform;
 
   pointer-events: none;
   z-index: 3;
 }
 
+/* 画像共通 */
 #bottom-sticky img {
-  width: 100vw;
-  height: auto;
   display: block;
-  opacity: 0.55;
+}
+
+/* ---------- PC ---------- */
+@media (min-width: 769px) {
+  #bottom-sticky {
+    height: auto;
+  }
+
+  #bottom-sticky img {
+    width: 100vw;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.55;
+  }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 768px) {
+  #bottom-sticky {
+    height: 38vh; /* ← モバイルで見せたい高さ */
+  }
+
+  #bottom-sticky img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* ← 中央トリミング */
+    object-position: center bottom;
+    opacity: 0.55;
+  }
 }
 
 
