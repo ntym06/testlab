@@ -108,6 +108,29 @@ h1 {
   opacity: 1;
 }
 
+/* メールGIFレイヤー */
+.mail-gif {
+  position: fixed;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: auto;
+  z-index: 5;
+}
+
+.mail-gif img {
+  width: 140px; /* 必要なら調整 */
+  height: auto;
+  display: block;
+}
+
+/* 表示状態 */
+.mail-gif.visible {
+  opacity: 0.9;
+}
+
 /* --------------------
    Mobile
 -------------------- */
