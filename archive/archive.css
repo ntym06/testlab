@@ -1,186 +1,96 @@
 /* --------------------
-   Archive base
+   Base
 -------------------- */
-
 body {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
   background: #fff;
   color: #111;
+  overflow: hidden;
 }
 
-#index {
+/* --------------------
+   Left: Index
+-------------------- */
+.index {
+  position: relative;
+  height: 100vh;
+  padding: 4rem;
+  padding-right: 420px;
+  overflow: hidden;
+}
+
+/* 動く帯 */
+.index-inner {
   display: flex;
   gap: 4rem;
-  padding: 4rem;
+  animation: scrollLoop 90s linear infinite;
 }
 
-/* Genre column */
+.index-inner.is-paused {
+  animation-play-state: paused;
+}
+
+@keyframes scrollLoop {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
+/* Genre */
 .genre {
-  flex: 1;
-  min-width: 220px;
+  min-width: 260px;
 }
 
 .genre h2 {
   font-size: 1rem;
   font-weight: normal;
   margin-bottom: 1.5rem;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
-/* Work item (text only) */
+/* Work item */
 .work {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  margin-bottom: 0.6rem;
   cursor: pointer;
-  margin-bottom: 0.8rem;
-  line-height: 1.4;
 }
 
 .work:hover {
   opacity: 0.6;
 }
 
-.year {
-  margin-right: 0.6rem;
-  opacity: 0.4;
-}
-
-.title {
-  display: inline;
-}
-
-/* Hover preview (single image) */
-#hoverPreview {
-  position: fixed;
-  width: 120px;
-  height: 100px;
-
-  background-color: #ccc; /* ← デバッグ用 */
-  background-size: cover;
-  background-position: center;
-
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-  z-index: 10;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  #index {
-    flex-direction: column;
-    gap: 2.5rem;
-    padding: 2rem;
-  }
-
-  #hoverPreview {
-    display: none;
-  }
-}
 /* --------------------
-   Layout
+   Right: Preview
 -------------------- */
-
-body {
-  margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
-  background: #fff;
-  color: #111;
-  font-size: 18px; /* ← 全体的に大きく */
-}
-
-/* 目次エリア（スクロール） */
-#index {
-  display: flex;
-  gap: 4rem;
-  padding: 4rem;
-
-  height: 100vh;
-  overflow-y: auto;
-
-  padding-right: 420px; /* プレビュー分の余白 */
-}
-
-/* ジャンル列 */
-.genre {
-  flex: 1;
-  min-width: 220px;
-}
-
-.genre h2 {
-  font-size: 1.1rem;
-  font-weight: normal;
-  margin-bottom: 1.5rem;
-  opacity: 0.6;
-}
-
-/* 各作品 */
-.work {
-  cursor: pointer;
-  margin-bottom: 1rem;
-  line-height: 1.5;
-  font-size: 1.05rem;
-}
-
-.work:hover {
-  opacity: 0.6;
-}
-
-.year {
-  margin-right: 0.6rem;
-  opacity: 0.4;
-}
-
-.title {
-  display: inline;
-}
-
-/* --------------------
-   Preview pane
--------------------- */
-
- #hoverPreview {
+#preview {
   position: fixed;
   top: 4rem;
   right: 4rem;
-
-  width: 340px;
-
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-
-  transition:
-    opacity 0.4s ease,
-    transform 0.4s ease;
+  width: 360px;
 }
 
-#hoverPreview.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-#hoverPreview .image {
+#preview .image {
   width: 100%;
   aspect-ratio: 4 / 3;
   background: #ddd;
   background-size: cover;
   background-position: center;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-#hoverPreview .meta {
+#preview .meta {
   margin-top: 0.8rem;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: #555;
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
-
-/* Mobile */
-@media (max-width: 768px) {
-  #hoverPreview {
-    display: none;
-  }
-
-  #index {
-    padding-right: 2rem;
-  }
+#preview.is-visible .image,
+#preview.is-visible .meta {
+  opacity: 1;
+  transform: translateY(0);
 }
