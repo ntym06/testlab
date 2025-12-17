@@ -77,5 +77,15 @@ body {
   #hoverPreview {
     display: none;
   }
+#hoverPreview {
+  position: fixed;
+  width: 300px;
+  height: 180px;
+  background: red;          /* ← 一時的 */
+  opacity: 1 !important;    /* ← 一時的 */
+  top: 100px;
+  left: 100px;
+  z-index: 9999;
+}
 
 
