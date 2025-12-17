@@ -226,28 +226,63 @@ window.addEventListener('scroll', () => {
 setLang(currentLang);
 animateGradient();
 </script>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const mail = document.querySelector('.mail-gif');
-  if (!mail) return;
+  const gifs = document.querySelectorAll('.mail-gif');
+  let started = false;
 
-  const margin = 40; // 端からの余白
-  const gifWidth = 500;
-  const gifHeight = 300; // だいたいでOK
+  function randomPosition(el) {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const rect = el.getBoundingClientRect();
 
-  const maxX = window.innerWidth - gifWidth - margin;
-  const maxY = window.innerHeight - gifHeight - margin;
+    const w = rect.width || 300;
+    const h = rect.height || 300;
 
-  const randomX = Math.max(margin, Math.random() * maxX);
-  const randomY = Math.max(margin, Math.random() * maxY);
+    const isMobile = vw < 768;
 
-  mail.style.left = `${randomX}px`;
-  mail.style.top = `${randomY}px`;
+    const marginX = isMobile ? w * 0.25 : 0;
+    const marginY = isMobile ? h * 0.25 : 0;
 
-  // 少し間を置いてふわっと出す
-  requestAnimationFrame(() => {
-    mail.classList.add('is-visible');
-  });
+    const minX = -marginX;
+    const maxX = vw - w + marginX;
+    const minY = -marginY;
+    const maxY = vh - h + marginY;
+
+    el.style.left =
+      Math.random() * (maxX - minX) + minX + 'px';
+    el.style.top =
+      Math.random() * (maxY - minY) + minY + 'px';
+  }
+
+  function start() {
+    gifs.forEach((gif, i) => {
+      // 初期位置（非表示）
+      randomPosition(gif);
+
+      // スクロール後、時間差で出現
+      setTimeout(() => {
+        gif.classList.add('is-visible');
+      }, 800 + i * 900);
+
+      // 漂い続ける
+      setInterval(() => {
+        randomPosition(gif);
+      }, 11000 + i * 2500);
+    });
+  }
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!started) {
+        started = true;
+        start();
+      }
+    },
+    { once: true }
+  );
 });
 </script>
 
