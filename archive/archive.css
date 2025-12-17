@@ -49,12 +49,16 @@ body {
 }
 
 /* Hover preview (single image) */
+}
 #hoverPreview {
   position: fixed;
   width: 320px;
   height: 200px;
+
+  background-color: #ccc;   /* ← これを一時的に追加 */
   background-size: cover;
   background-position: center;
+
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
@@ -72,4 +76,5 @@ body {
   #hoverPreview {
     display: none;
   }
-}
+
+
