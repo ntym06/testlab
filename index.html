@@ -6,61 +6,226 @@
 <title>nat/yama — under construction</title>
 
 <style>
-html, body {
-  margin: 0;
-  height: 200vh;
-  font-family: Georgia, "Times New Roman", serif;
+  html, body {
+    margin: 0;
+    height: 200vh;
+    font-family: serif;
+    transition: background 2s ease;
+  }
+
+  /* 背景用グラデーションアニメーション */
+  body {
+    background: linear-gradient(135deg, #e0f0ff, #cce6ff, #BCEFFD);
+    background-size: 400% 400%;
+    animation: gradientMove 20s ease infinite;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* 溶けるテキスト層 */
+  .text {
+    position: fixed;
+    inset: 0;
+    padding: 4rem;
+    pointer-events: none;
+    transition: opacity 0.6s ease, filter 0.6s ease;
+    color: rgba(60, 60, 60, 0.55);
+    font-size: 1.5rem;
+    line-height: 1.55;
+    z-index: 1;
+  }
+
+  .lang {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .lang.active {
+    opacity: 1;
+  }
+
+  .studio {
+    display: block;
+    margin-bottom: 3.5rem;
+    font-size: 1.1rem;
+    opacity: 0.45;
+    letter-spacing: 0.02em;
+  }
+
+  /* UI */
+  .ui {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    color: rgba(60,60,60,0.6);
+    z-index: 5;
+  }
+
+  .ui span {
+    cursor: pointer;
+    opacity: 0.4;
+  }
+
+  .ui span:hover {
+    opacity: 1;
+  }
+
+  /* mail GIF */
+  .mail-gif {
+    position: fixed;
+    bottom: 3rem;
+    left: 3rem;
+    z-index: 4;
+
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+
+    pointer-events: auto;
+  }
+
+  .mail-gif.visible {
+    opacity: 0.85;
+    transform: translateY(0);
+  }
+
+  .mail-gif img {
+    width: 64px;
+    height: auto;
+    display: block;
+  }
+
+  /* mobile */
+  @media (max-width: 768px) {
+    .text {
+      padding: 2rem 1.5rem;
+      font-size: 1.6rem;
+    }
+
+    .studio {
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .ui {
+      bottom: 1.5rem;
+      right: 1.5rem;
+      font-size: 12px;
+    }
+
+    .mail-gif {
+      left: 1.5rem;
+      bottom: 2rem;
+    }
+
+    .mail-gif img {
+      width: 52px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="text" id="text">
+  <span class="studio">nat/yama — under construction</span>
+
+  <p class="lang en active">
+    Berlin-based designer for cultural projects
+  </p>
+  <p class="lang ja">
+    nat/yamaは<br>
+    コンセプト設計から表現まで手がける<br>
+    アートディレクターです
+  </p>
+  <p class="lang de">
+    Kultur- und Mediengestalterin<br>
+    für Bildungs- und Kontextprojekte
+  </p>
+</div>
+
+<div class="ui">
+  <span data-lang="en">EN</span> |
+  <span data-lang="ja">JP</span> |
+  <span data-lang="de">DE</span>
+</div>
+
+<a href="mailto:n@natyama.com" class="mail-gif" aria-label="contact">
+  <img src="svg/email-animation.gif" alt="contact mail">
+</a>
+
+<script>
+const langs = document.querySelectorAll('.lang');
+const text = document.getElementById('text');
+const buttons = document.querySelectorAll('.ui span');
+const mailGif = document.querySelector('.mail-gif');
+
+/* 言語ごとの淡いグラデーションパレット */
+const bgGradients = {
+  en: ['#e0f0ff', '#cce6ff', '#BCEFFD'],
+  ja: ['#fff7e6', '#fff0cc', '#ffe6b3'],
+  de: ['#f0fff0', '#dfffe0', '#cce6cc']
+};
+
+let currentLang =
+  navigator.language.startsWith('ja') ? 'ja' :
+  navigator.language.startsWith('de') ? 'de' : 'en';
+
+let gradientIndex = 0;
+let mailShown = false;
+
+/* 言語切替 */
+function setLang(lang) {
+  langs.forEach(l => l.classList.remove('active'));
+  document.querySelector('.lang.' + lang).classList.add('active');
+  currentLang = lang;
+
+  const colors = bgGradients[lang];
+  document.body.style.background =
+    `linear-gradient(135deg, ${colors.join(',')})`;
+  document.body.style.backgroundSize = '400% 400%';
+
+  text.style.opacity = 1;
+  text.style.filter = 'blur(0px)';
 }
 
-/* background */
-body {
-  background: linear-gradient(135deg, #e0f0ff, #cce6ff, #BCEFFD);
-  background-size: 400% 400%;
-  animation: gradientMove 40s ease infinite;
+buttons.forEach(b => {
+  b.onclick = () => setLang(b.dataset.lang);
+});
+
+/* グラデーション推移 */
+function animateGradient() {
+  const colors = bgGradients[currentLang];
+  gradientIndex = (gradientIndex + 1) % colors.length;
+  document.body.style.background =
+    `linear-gradient(135deg, ${colors[gradientIndex]}, ${colors[(gradientIndex + 1) % colors.length]})`;
+  document.body.style.backgroundSize = '400% 400%';
+
+  setTimeout(animateGradient, 6000);
 }
 
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+/* スクロール演出 */
+window.addEventListener('scroll', () => {
+  const t = Math.min(scrollY / 400, 1);
+  text.style.opacity = 1 - t;
+  text.style.filter = `blur(${t * 6}px)`;
 
-/* text layer */
-.text {
-  position: fixed;
-  inset: 0;
-  padding: 4rem;
-  pointer-events: none;
-  color: rgba(60,60,60,0.55);
-  font-size: 1.5rem;
-  line-height: 1.55;
-  transition: opacity 0.6s ease, filter 0.6s ease;
-  z-index: 2;
-}
+  if (!mailShown && scrollY > 30) {
+    mailGif.classList.add('visible');
+    mailShown = true;
+  }
+});
 
-.lang { opacity: 0; transition: opacity 0.8s ease; }
-.lang.active { opacity: 1; }
+/* 初期化 */
+setLang(currentLang);
+animateGradient();
+</script>
 
-.studio {
-  display: block;
-  margin-bottom: 3rem;
-  font-size: 1.1rem;
-  opacity: 0.45;
-}
-
-/* language UI */
-.ui {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  font-size: 14px;
-  letter-spacing: 0.12em;
-  color: rgba(60,60,60,0.6);
-  z-index: 5;
-}
-
-.ui span {
-  cursor: pointer;
-  opacity: 0.4;
-}
-.ui span:hover { o
+</body>
+</html>
