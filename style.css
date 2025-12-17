@@ -131,8 +131,8 @@ h1 {
 /* サイズ制御（モバイルで縮みすぎない） */
 @media (max-width: 768px) {
   .mail-gif img {
-    width: 180px;
-    max-width: 65vw;
+    width: 100px;
+    max-width: 55vw;
   }
 }
 
