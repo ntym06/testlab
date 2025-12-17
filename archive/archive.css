@@ -12,6 +12,9 @@ body {
 /* --------------------
    Left: Index
 -------------------- */
+/* --------------------
+   Index columns
+-------------------- */
 .index {
   position: relative;
   height: 100vh;
@@ -20,27 +23,41 @@ body {
   overflow: hidden;
 }
 
-/* 動く帯 */
-.index-inner {
+.index-columns {
   display: flex;
   gap: 4rem;
-  animation: scrollLoop 90s linear infinite;
 }
 
-.index-inner.is-paused {
+.column {
+  width: 260px;
+  overflow: hidden;
+}
+
+/* 上に流れる列 */
+.column.up .column-inner {
+  animation: scrollUp 90s linear infinite;
+}
+
+/* 下に流れる列 */
+.column.down .column-inner {
+  animation: scrollDown 90s linear infinite;
+}
+
+.column.is-paused .column-inner {
   animation-play-state: paused;
 }
 
-@keyframes scrollLoop {
+@keyframes scrollUp {
   from { transform: translateY(0); }
   to   { transform: translateY(-50%); }
 }
 
-/* Genre */
-.genre {
-  min-width: 260px;
+@keyframes scrollDown {
+  from { transform: translateY(-50%); }
+  to   { transform: translateY(0); }
 }
 
+/* Genre / Work */
 .genre h2 {
   font-size: 1rem;
   font-weight: normal;
@@ -48,7 +65,6 @@ body {
   opacity: 0.5;
 }
 
-/* Work item */
 .work {
   font-size: 1.4rem;
   line-height: 1.6;
