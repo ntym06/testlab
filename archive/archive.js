@@ -8,22 +8,27 @@ console.log("archive.js loaded");
 const indexEl = document.getElementById("index");
 const previewEl = document.getElementById("hoverPreview");
 
-// CSV読み込み
-  Papa.parse("./portfolio.csv?ts=" + Date.now(), {
+// --------------------
+// CSV Load (cache bust)
+// --------------------
+Papa.parse("./portfolio.csv?cb=" + Date.now(), {
   download: true,
   header: true,
   skipEmptyLines: true,
   complete: function (results) {
-    const data = results.data.filter(d => d.Title && d.Type && d.Year);
+    const data = results.data.filter(
+      d => d.Title && d.Type && d.Year
+    );
     buildIndex(data);
-  
   },
   error: function (err) {
     console.error("CSV load error:", err);
   }
 });
 
-// ジャンル別に構築
+// --------------------
+// Build index by genre
+// --------------------
 function buildIndex(data) {
   const grouped = {};
 
@@ -46,7 +51,7 @@ function buildIndex(data) {
       .forEach(item => {
         const work = document.createElement("div");
         work.className = "work";
-        work.dataset.image = item["Main Project Image"];
+        work.dataset.image = item["Main Project Image"] || "";
         work.dataset.link = item.Link || "";
 
         work.innerHTML = `
@@ -63,35 +68,42 @@ function buildIndex(data) {
   bindHover();
 }
 
-// ホバープレビュー
+// --------------------
+// Hover preview (Safari / Chrome safe)
+// --------------------
 function bindHover() {
   const works = document.querySelectorAll(".work");
 
   works.forEach(work => {
-    work.addEventListener("mouseenter", () => {
-      const rect = work.getBoundingClientRect();
-      const img = work.dataset.image;
 
-      if (img) {
-        previewEl.style.backgroundImage = `url("${img}")`;
-      }
+    // hover / move
+    work.addEventListener("mousemove", () => {
+      const img = work.dataset.image;
+      if (!img) return;
+
+      const rect = work.getBoundingClientRect();
+
+      // Safari repaint fix
+      previewEl.style.backgroundImage = "none";
+      previewEl.offsetHeight;
+      previewEl.style.backgroundImage = `url("${img}")`;
 
       previewEl.style.left = `${rect.left}px`;
       previewEl.style.top =
         `${rect.top - previewEl.offsetHeight - 12}px`;
+
       previewEl.style.opacity = 1;
     });
 
+    // leave
     work.addEventListener("mouseleave", () => {
       previewEl.style.opacity = 0;
     });
 
+    // click → detail
     work.addEventListener("click", () => {
       if (work.dataset.link) {
         window.location.href = work.dataset.link;
-
-    console.log("hover:", work.dataset.image);
-    
       }
     });
   });
