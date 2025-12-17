@@ -1,17 +1,18 @@
 // ------------------------------------
 // Archive Index Script
 // CSV → Genre → Year(desc)
-// Hover preview on title
+// Hover preview in fixed pane
 // ------------------------------------
 console.log("archive.js loaded");
 
+// DOM
 const indexEl = document.getElementById("index");
 const previewEl = document.getElementById("hoverPreview");
+const previewImg = previewEl.querySelector(".image");
+const previewMeta = previewEl.querySelector(".meta");
 
-// --------------------
-// CSV Load (cache bust)
-// --------------------
-Papa.parse("./portfolio.csv?cb=" + Date.now(), {
+// CSV読み込み
+Papa.parse("./portfolio.csv?ts=" + Date.now(), {
   download: true,
   header: true,
   skipEmptyLines: true,
@@ -27,7 +28,7 @@ Papa.parse("./portfolio.csv?cb=" + Date.now(), {
 });
 
 // --------------------
-// Build index by genre
+// Build index
 // --------------------
 function buildIndex(data) {
   const grouped = {};
@@ -69,40 +70,14 @@ function buildIndex(data) {
 }
 
 // --------------------
-// Hover preview (Safari / Chrome safe)
+// Hover preview (FIXED)
 // --------------------
 function bindHover() {
   const works = document.querySelectorAll(".work");
 
-  const preview = document.getElementById("hoverPreview");
-  const previewImg = preview.querySelector(".image");
-  const previewMeta = preview.querySelector(".meta");
-
   works.forEach(work => {
     work.addEventListener("mouseenter", () => {
       const img = work.dataset.image;
-      const title = work.querySelector(".title")?.textContent || "";
-      const year = work.querySelector(".year")?.textContent || "";
-
       if (!img) return;
 
-      previewImg.style.backgroundImage = `url("${img}")`;
-      previewMeta.innerHTML = `
-        <strong>${title}</strong><br>
-        ${year}
-      `;
-
-      preview.classList.add("is-visible");
-    });
-
-    work.addEventListener("mouseleave", () => {
-      preview.classList.remove("is-visible");
-    });
-
-    work.addEventListener("click", () => {
-      // 今は未接続でOK
-      // window.location.href = work.dataset.link;
-    });
-  });
-}
-
+      previewImg.style.
