@@ -231,6 +231,20 @@ window.addEventListener('scroll', () => {
 setLang(currentLang);
 animateGradient();
 </script>
+<script>
+window.addEventListener('scroll', () => {
+  const maxScroll = 400;
+  const y = Math.min(scrollY, maxScroll);
+  const t = y / maxScroll;
+
+  /* GIF：スクロール進度でゆっくり現れる */
+  const mailGif = document.querySelector('.mail-gif');
+  if (!mailGif) return;
+
+  mailGif.style.opacity = (t * 0.85).toFixed(2);
+  mailGif.style.transform = `translateY(${12 - t * 12}px)`;
+});
+</script>
 
 </body>
 </html>
