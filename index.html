@@ -150,21 +150,15 @@ body {
 </a>
 
 <script>
-// --------------------
-// Language + Gradient
-// --------------------
-const langs = document.querySelectorAll('.lang');
-const text = document.getElementById('text');
-const buttons = document.querySelectorAll('.ui span');
-const bgGradients = {
-  en: ['#e0f0ff','#cce6ff','#BCEFFD'],
-  ja: ['#fff7e6','#fff0cc','#ffe6b3'],
-  de: ['#f0fff0','#dfffe0','#cce6cc']
-};
+/* --------------------
+   Language + Gradient
+-------------------- */
+const langs=document.querySelectorAll('.lang');
+const text=document.getElementById('text');
+const buttons=document.querySelectorAll('.ui span');
+const bgGradients={en:['#e0f0ff','#cce6ff','#BCEFFD'],ja:['#fff7e6','#fff0cc','#ffe6b3'],de:['#f0fff0','#dfffe0','#cce6cc']};
 
-let currentLang =
-  navigator.language.startsWith('ja') ? 'ja' :
-  navigator.language.startsWith('de') ? 'de' : 'en';
+let currentLang = navigator.language.startsWith('ja')?'ja':navigator.language.startsWith('de')?'de':'en';
 
 function setLang(lang){
   langs.forEach(l=>l.classList.remove('active'));
@@ -187,18 +181,18 @@ function animateGradient(){
 setLang(currentLang);
 animateGradient();
 
-// --------------------
-// Text scroll fade/blur
-// --------------------
+/* --------------------
+   Text scroll fade/blur
+-------------------- */
 window.addEventListener('scroll', ()=>{
   const t=Math.min(scrollY/400,1);
   text.style.opacity=1-t;
   text.style.filter=`blur(${t*6}px)`;
 });
 
-// --------------------
-// Floating GIF
-// --------------------
+/* --------------------
+   Floating GIF
+-------------------- */
 const mailGif=document.querySelector('.mail-gif');
 
 function randomPosition(el){
@@ -211,8 +205,8 @@ function randomPosition(el){
   const safeX = vw*0.2;
   const safeY = vh*0.15;
 
-  const maxX = vw-w;
-  const maxY = vh-h;
+  const maxX = vw - w;
+  const maxY = vh - h;
 
   const x = safeX + Math.random()*(maxX-safeX);
   const y = safeY + Math.random()*(maxY-safeY);
@@ -231,27 +225,18 @@ function floatGif(el,interval=10000){
   },interval);
 }
 
-window.addEventListener('DOMContentLoaded', ()=>{
-  randomPosition(mailGif);
-  setTimeout(()=>mailGif.classList.add('is-visible'),800);
-  floatGif(mailGif,11000);
-});
-
-window.addEventListener('resize',()=>randomPosition(mailGif));
-
-// --------------------
-// Scroll-trigger GIF appearance
-// --------------------
-
-   let mailShown = false;
-window.addEventListener('scroll', () => {
-  if (!mailShown && window.scrollY > 30) {
-    mailGif.classList.add('is-visible'); // ふわっと表示
-    mailShown = true;
+/* 初期表示はスクロール後 */
+let mailShown=false;
+window.addEventListener('scroll',()=>{
+  if(!mailShown && window.scrollY>30){
+    mailShown=true;
+    randomPosition(mailGif);
+    setTimeout(()=>mailGif.classList.add('is-visible'),500);
+    floatGif(mailGif,11000);
   }
 });
 
-});
+window.addEventListener('resize',()=>randomPosition(mailGif));
 </script>
 
 </body>
