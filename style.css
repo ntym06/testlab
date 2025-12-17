@@ -90,26 +90,25 @@ h1 {
 .mail-gif {
   position: fixed;
   z-index: 4;
+  pointer-events: none;
 
-  /* 表示サイズ・見え方 */
-  opacity: 0;
-  transform: translateY(20px) scale(0.98);
+  opacity: 0 !important;
+  transform: translateY(30px) scale(0.96);
+
   transition:
-    opacity 1.2s ease,
-    transform 1.2s ease;
-
-  pointer-events: none; /* 背景要素として */
+    opacity 3.5s ease,
+    transform 3.5s ease !important;
 }
 
 .mail-gif.is-visible {
-  opacity: 0.6; /* 60%透過 */
+  opacity: 0.6 !important;
   transform: translateY(0) scale(1);
 }
 
+.mail-gif,
 .mail-gif img {
-  width: 500px;
-  height: auto;
-  display: block;
+  width: 500px !important;
+  max-width: none !important;
 }
 
 
