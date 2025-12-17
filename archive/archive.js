@@ -74,37 +74,41 @@ function buildIndex(data) {
 function bindHover() {
   const works = document.querySelectorAll(".work");
 
+  const preview = document.getElementById("hoverPreview");
+  const previewImg = preview.querySelector(".image");
+  const previewMeta = preview.querySelector(".meta");
+
   works.forEach(work => {
-
-    // hover / move
-    work.addEventListener("mousemove", () => {
-      const img = work.dataset.image;
-      if (!img) return;
-
+    work.addEventListener("mouseenter", () => {
       const rect = work.getBoundingClientRect();
+      const img = work.dataset.image;
+      const title = work.querySelector(".title")?.textContent || "";
+      const year = work.querySelector(".year")?.textContent || "";
 
-      // Safari repaint fix
-      previewEl.style.backgroundImage = "none";
-      previewEl.offsetHeight;
-      previewEl.style.backgroundImage = `url("${img}")`;
+      // image
+      previewImg.style.backgroundImage = `url("${img}")`;
 
-      previewEl.style.left = `${rect.left}px`;
-      previewEl.style.top =
-        `${rect.top - previewEl.offsetHeight - 12}px`;
+      // meta
+      previewMeta.innerHTML = `
+        <strong>${title}</strong><br>
+        ${year}
+      `;
 
-      previewEl.style.opacity = 1;
+      // 該当タイトルだけ避ける位置調整
+      preview.style.top = `${Math.max(64, rect.top - 40)}px`;
+
+      // fade in
+      preview.style.opacity = 1;
     });
 
-    // leave
     work.addEventListener("mouseleave", () => {
-      previewEl.style.opacity = 0;
+      preview.style.opacity = 0;
     });
 
-    // click → detail
     work.addEventListener("click", () => {
-      if (work.dataset.link) {
-        window.location.href = work.dataset.link;
-      }
+      // worksページ接続（今は無効でOK）
+      // window.location.href = work.dataset.link;
     });
   });
 }
+
