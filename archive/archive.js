@@ -89,6 +89,9 @@ function bindHover() {
     work.addEventListener("click", () => {
       if (work.dataset.link) {
         window.location.href = work.dataset.link;
+
+    console.log("hover:", work.dataset.image);
+    
       }
     });
   });
