@@ -107,21 +107,31 @@ h1 {
 .email-link:hover .email-gif {
   opacity: 1;
 }
-
-/* メールGIFレイヤー */
 .mail-gif {
   position: fixed;
-  left: 50%;
-  top: 55%;
-  transform: translate(-50%, -50%);
+  bottom: 3rem;
+  left: 3rem;
+  z-index: 4;
+
   opacity: 0;
-  transition: opacity 1.2s ease;
+  transform: translateY(14px);
+  transition: opacity 1.1s ease, transform 1.1s ease;
+
   pointer-events: auto;
-  z-index: 5;
+}
+
+.mail-gif.visible {
+  opacity: 0.85;
+  transform: translateY(0);
+}
+
+.mail-gif.hidden {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 .mail-gif img {
-  width: 140px; /* 必要なら調整 */
+  width: 64px;
   height: auto;
   display: block;
 }
