@@ -4,85 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>nat/yama — under construction</title>
-
-  <!-- CSSを確実に読み込ませる -->
   <link rel="stylesheet" href="./style.css" />
 </head>
 
+<body class="lang-en">
 
-<body>
+  <main class="container">
 
-  <!-- テキストレイヤー -->
-  <div class="text" id="text">
-    <span class="studio">nat/yama — under construction</span>
+    <section class="text">
 
-    <p class="lang en active">
-      Berlin-based graphic designer<br>
-      for cultural and educational projects
-    </p>
+      <h1>nat/yama — under construction</h1>
 
-    <p class="lang ja">
-      nat/yama はコンセプト設計から表現まで手がける<br>
-      アートディレクターです<br>
-      思考を文脈化し、体験へと編み直します
-    </p>
+      <p class="lang lang-en active">
+        Berlin-based graphic designer<br>
+        for cultural and educational projects
+      </p>
 
-    <p class="lang de">
-      Kultur- und Mediengestalterin in Berlin<br>
-      für Bildungs- und Kontextprojekte
-    </p>
-  </div>
+      <p class="lang lang-ja">
+        nat/yama はコンセプト設計から表現まで手がける<br>
+        アートディレクターです<br>
+        思考を文脈化し、体験へと編み直します
+      </p>
 
-  <!-- メールGIF（全言語共通） -->
-  <a href="mailto:hello@natyama.com" class="mail-trigger">
-    <img
-      src="svg/email-animation.gif"
-      alt="contact"
-      class="mail-gif"
-    />
-  </a>
+      <p class="lang lang-de">
+        Kultur- und Mediengestalterin in Berlin<br>
+        für Bildungs- und Kontextprojekte
+      </p>
 
-  <!-- 言語UI -->
-  <div class="ui">
-    <span data-lang="en">EN</span> |
-    <span data-lang="ja">JP</span> |
-    <span data-lang="de">DE</span>
-  </div>
+    </section>
 
-  <script>
-    const text = document.getElementById('text');
-    const langs = document.querySelectorAll('.lang');
-    const buttons = document.querySelectorAll('.ui span');
+    <a class="email-link" href="mailto:hello@natyama.com">
+      <img
+        src="./svg/email-animation.gif"
+        alt="contact via email"
+        class="email-gif"
+      />
+    </a>
 
-    function setLang(lang) {
-      langs.forEach(l => l.classList.remove('active'));
-      document.querySelector('.lang.' + lang).classList.add('active');
-    }
-
-    const initial =
-      navigator.language.startsWith('ja') ? 'ja' :
-      navigator.language.startsWith('de') ? 'de' : 'en';
-
-    setLang(initial);
-
-    buttons.forEach(b => {
-      b.onclick = () => setLang(b.dataset.lang);
-    });
-
-    // スクロールでテキストが溶け、途中でGIFが浮上
-    window.addEventListener('scroll', () => {
-      const t = Math.min(window.scrollY / 400, 1);
-
-      text.style.opacity = 1 - t;
-      text.style.filter = `blur(${t * 6}px)`;
-
-      if (t > 0.45 && t < 0.85) {
-        document.body.classList.add('scrolled-mid');
-      } else {
-        document.body.classList.remove('scrolled-mid');
-      }
-    });
-  </script>
+  </main>
 
 </body>
 </html>
