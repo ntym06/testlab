@@ -1,47 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nat/yama — under construction</title>
-  <link rel="stylesheet" href="./style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>nat/yama — under construction</title>
+
+<style>
+/* =========================
+   Base
+========================= */
+html, body {
+  margin: 0;
+  height: 200vh;
+  font-family: serif;
+}
+
+/* =========================
+   Language color variables
+========================= */
+body {
+  --bg-a: #e0f0ff;
+  --bg-b: #cce6ff;
+  --bg-c: #bceffd;
+}
+
+body.lang-ja {
+  --bg-a: #fff7e6;
+  --bg-b: #fff0cc;
+  --bg-c: #ffe6b3;
+}
+
+body.lang-de {
+  --bg-a: #f0fff0;
+  --bg-b: #dfffe0;
+  --bg-c: #cce6cc;
+}
+
+/* =========================
+   Background animation
+========================= */
+body {
+  background: linear-gradient(
+    135deg,
+    var(--bg-a),
+    var(--bg-b),
+    var(--bg-c)
+  );
+  background-size: 400% 400%;
+  animation: gradientMove 40s ease-in-out infinite;
+  transition: background 2s ease;
+}
+
+@keyframes gradientMove {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* =========================
+   Text layer
+========================= */
+.text {
+  position: fixed;
+  inset: 0;
+  padding: 4rem;
+  pointer-events: none;
+  color: rgba(60, 60, 60, 0.55);
+  font-size: 1.5rem;
+  line-height: 1.55;
+  transition: opacity 0.6s ease, filter 0.6s ease;
+}
+
+.lang {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.lang.active {
+  opacity: 1;
+}
+
+.studio {
+  display: block;
+  margin-bottom: 3.5rem;
+  font-size: 1.1rem;
+  opacity: 0.45;
+  letter-spacing: 0.02em;
+}
+
+/* =========================
+   UI
+========================= */
+.ui {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: rgba(60,60,60,0.6);
+}
+
+.ui span {
+  cursor: pointer;
+  opacity: 0.4;
+}
+
+.ui span:hover {
+  opacity: 1;
+}
+
+/* =========================
+   Mobile
+========================= */
+@media (max-width: 768px) {
+  .text {
+    padding: 2rem 1.5rem;
+    font-size: 1.6rem;
+  }
+
+  .studio {
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+
+  .ui {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    font-size: 12px;
+  }
+}
+</style>
 </head>
 
-<body class="lang-en">
+<body>
 
-  <main class="container">
+<div class="text" id="text">
+  <span class="studio">nat/yama — under construction</span>
 
-    <section class="text">
+  <p class="lang en active">
+    Berlin-based designer for cultural projects
+  </p>
+  <p class="lang ja">
+    nat/yama はコンセプト設計から表現まで手がける<br>
+    アートディレクターです
+  </p>
+  <p class="lang de">
+    Kultur- und Mediengestalterin<br>
+    für Bildungs- und Kontextprojekte
+  </p>
+</div>
 
-      <h1>nat/yama — under construction</h1>
+<div class="ui">
+  <span data-lang="en">EN</span> |
+  <span data-lang="ja">JP</span> |
+  <span data-lang="de">DE</span>
+</div>
 
-      <p class="lang lang-en active">
-        Berlin-based graphic designer<br>
-        for cultural and educational projects
-      </p>
+<script>
+/* =========================
+   Language switch
+========================= */
+const langs = document.querySelectorAll('.lang');
+const text = document.getElementById('text');
+const buttons = document.querySelectorAll('.ui span');
 
-      <p class="lang lang-ja">
-        nat/yama はコンセプト設計から表現まで手がける<br>
-        アートディレクターです<br>
-        思考を文脈化し、体験へと編み直します
-      </p>
+const browserLang =
+  navigator.language.startsWith('ja') ? 'ja' :
+  navigator.language.startsWith('de') ? 'de' : 'en';
 
-      <p class="lang lang-de">
-        Kultur- und Mediengestalterin in Berlin<br>
-        für Bildungs- und Kontextprojekte
-      </p>
+function setLang(lang) {
+  document.body.className = `lang-${lang}`;
+  langs.forEach(l => l.classList.remove('active'));
+  document.querySelector('.lang.' + lang).classList.add('active');
 
-    </section>
+  text.style.opacity = 1;
+  text.style.filter = 'blur(0px)';
+}
 
-    <a class="email-link" href="mailto:hello@natyama.com">
-      <img
-        src="./svg/email-animation.gif"
-        alt="contact via email"
-        class="email-gif"
-      />
-    </a>
+buttons.forEach(b => {
+  b.onclick = () => setLang(b.dataset.lang);
+});
 
-  </main>
+setLang(browserLang);
+
+/* =========================
+   Scroll dissolve
+========================= */
+window.addEventListener('scroll', () => {
+  const t = Math.min(scrollY / 400, 1);
+  text.style.opacity = 1 - t;
+  text.style.filter = `blur(${t * 6}px)`;
+});
+</script>
 
 </body>
 </html>
