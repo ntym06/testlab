@@ -52,18 +52,19 @@ body {
 }
 #hoverPreview {
   position: fixed;
-  width: 320px;
-  height: 200px;
+  width: 120px;
+  height: 100px;
 
   background-color: #ccc;   /* ← これを一時的に追加 */
   background-size: cover;
   background-position: center;
 
-  opacity: 0;
+  opacity: 0.8;
   pointer-events: none;
   transition: opacity 0.25s ease;
   z-index: 10;
 }
+
 
 /* Mobile */
 @media (max-width: 768px) {
