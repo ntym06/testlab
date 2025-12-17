@@ -76,3 +76,102 @@ body {
     display: none;
   }
 }
+/* --------------------
+   Layout
+-------------------- */
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  background: #fff;
+  color: #111;
+  font-size: 18px; /* ← 全体的に大きく */
+}
+
+/* 目次エリア（スクロール） */
+#index {
+  display: flex;
+  gap: 4rem;
+  padding: 4rem;
+
+  height: 100vh;
+  overflow-y: auto;
+
+  padding-right: 420px; /* プレビュー分の余白 */
+}
+
+/* ジャンル列 */
+.genre {
+  flex: 1;
+  min-width: 220px;
+}
+
+.genre h2 {
+  font-size: 1.1rem;
+  font-weight: normal;
+  margin-bottom: 1.5rem;
+  opacity: 0.6;
+}
+
+/* 各作品 */
+.work {
+  cursor: pointer;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  font-size: 1.05rem;
+}
+
+.work:hover {
+  opacity: 0.6;
+}
+
+.year {
+  margin-right: 0.6rem;
+  opacity: 0.4;
+}
+
+.title {
+  display: inline;
+}
+
+/* --------------------
+   Preview pane
+-------------------- */
+
+#hoverPreview {
+  position: fixed;
+  top: 4rem;
+  right: 4rem;
+
+  width: 340px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+#hoverPreview .image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #eee;
+  background-size: cover;
+  background-position: center;
+}
+
+#hoverPreview .meta {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #555;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  #hoverPreview {
+    display: none;
+  }
+
+  #index {
+    padding-right: 2rem;
+  }
+}
