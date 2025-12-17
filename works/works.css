@@ -29,3 +29,15 @@ body {
   display: flex;
   gap: 2rem;
 }
+/* 全体 */
+.work {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+/* 各スライド */
+.slide,
+.meta {
+  scroll-snap-align: start;
+}
