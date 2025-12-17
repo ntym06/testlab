@@ -87,29 +87,9 @@ h1 {
 /* --------------------
    Email GIF
 -------------------- */
-.mail-gif {
-  position: fixed;
-  z-index: 4;
-  pointer-events: none;
-
-  opacity: 0 !important;
-  transform: translateY(30px) scale(0.96);
-
-  transition:
-    opacity 5.5s ease,
-    transform 5.5s ease !important;
-}
-
-.mail-gif.is-visible {
-  opacity: 0.6 !important;
-  transform: translateY(0) scale(1);
-}
-
-.mail-gif,
-.mail-gif img {
-  width: 500px !important;
-  max-width: none !important;
-}
+/* --------------------
+   Floating Email GIF
+-------------------- */
 
 .floating-gifs {
   position: fixed;
@@ -123,11 +103,11 @@ h1 {
   pointer-events: auto;
 
   opacity: 0;
-  transform: translateY(28px) scale(0.98);
+  transform: translateY(30px) scale(0.96);
 
   transition:
-    opacity 3.5s ease,
-    transform 3.5s ease,
+    opacity 5.5s ease,
+    transform 5.5s ease,
     left 10s ease,
     top 10s ease;
 }
@@ -137,7 +117,7 @@ h1 {
   transform: translateY(0) scale(1);
 }
 
-/* 👇 ここが今回の重要調整点 */
+/* サイズ制御（モバイルで縮みすぎない） */
 .mail-gif img {
   width: min(500px, max(320px, 60vw));
   height: auto;
