@@ -25,7 +25,7 @@ html, body {
    Background animation
 -------------------- */
 body {
-  background: linear-gradient(135deg, #e0f0ff, #cce6ff, #BCEFFD);
+  background: linear-gradient(135deg, #e0f0ff, #e6edf3, #d6f3fb);
   background-size: 400% 400%;
   animation: gradientMove 20s ease infinite;
 }
@@ -156,7 +156,7 @@ body {
 const langs=document.querySelectorAll('.lang');
 const text=document.getElementById('text');
 const buttons=document.querySelectorAll('.ui span');
-const bgGradients={en:['#e0f0ff','#cce6ff','#BCEFFD'],ja:['#fff7e6','#fff0cc','#ffe6b3'],de:['#f0fff0','#dfffe0','#cce6cc']};
+const bgGradients={en:['#e0f0ff','#e6edf3','#d6f3fb'],ja:['#fff7e6','#fff0cc','#ffe6b3'],de:['#f0fff0','#dfffe0','#cce6cc']};
 
 let currentLang = navigator.language.startsWith('ja')?'ja':navigator.language.startsWith('de')?'de':'en';
 
@@ -240,7 +240,7 @@ window.addEventListener('resize',()=>randomPosition(mailGif));
 </script>
 <script>
 const bgGradients = {
-  en: ['#e0f0ff','#cce6ff','#BCEFFD'],
+  en: ['#e0f0ff','#e6edf3','#d6f3fb'],
   ja: ['#fff7e6','#fff0cc','#ffe6b3'],
   de: ['#f0fff0','#dfffe0','#cce6cc']
 };
