@@ -232,29 +232,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const gifs = document.querySelectorAll('.mail-gif');
   let started = false;
 
-  function randomPosition(el) {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const rect = el.getBoundingClientRect();
+function randomPosition(el) {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
 
-    const w = rect.width || 300;
-    const h = rect.height || 300;
+  // 実寸取得（未表示でも取れる）
+  const rect = el.getBoundingClientRect();
+  const w = rect.width || 300;
+  const h = rect.height || 300;
 
-    const isMobile = vw < 768;
+  // 完全に画面内に収める範囲
+  const maxX = Math.max(0, vw - w);
+  const maxY = Math.max(0, vh - h);
 
-    const marginX = isMobile ? w * 0.25 : 0;
-    const marginY = isMobile ? h * 0.25 : 0;
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
 
-    const minX = -marginX;
-    const maxX = vw - w + marginX;
-    const minY = -marginY;
-    const maxY = vh - h + marginY;
+  el.style.left = `${x}px`;
+  el.style.top = `${y}px`;
+}
 
-    el.style.left =
-      Math.random() * (maxX - minX) + minX + 'px';
-    el.style.top =
-      Math.random() * (maxY - minY) + minY + 'px';
-  }
 
   function start() {
     gifs.forEach((gif, i) => {
@@ -272,6 +269,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 11000 + i * 2500);
     });
   }
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.mail-gif').forEach(el => {
+    randomPosition(el);
+  });
+});
 
   window.addEventListener(
     'scroll',
