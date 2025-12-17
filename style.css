@@ -4,3 +4,131 @@
 html, body {
   transition: background 2s ease;
 }
+
+/* 基本設定 */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 200vh;
+  font-family: serif;
+
+  /* 背景グラデーション（CSSのみ・常に流れる） */
+  background: linear-gradient(
+    120deg,
+    #eef3fa,
+    #f6f1e7,
+    #e8f2ec
+  );
+  background-size: 400% 400%;
+  animation: bgFlow 30s ease-in-out infinite;
+}
+
+@keyframes bgFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* テキストレイヤー */
+.text {
+  position: fixed;
+  inset: 0;
+  padding: 4rem;
+  pointer-events: none;
+  color: rgba(60, 60, 60, 0.55);
+  font-size: 1.5rem;
+  line-height: 1.55;
+  transition: opacity 0.6s ease, filter 0.6s ease;
+}
+
+.lang {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.lang.active {
+  opacity: 1;
+}
+
+.studio {
+  display: block;
+  margin-bottom: 3.5rem;
+  font-size: 1.1rem;
+  opacity: 0.45;
+  letter-spacing: 0.02em;
+}
+
+/* UI */
+.ui {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: rgba(60,60,60,0.6);
+  z-index: 10;
+}
+
+.ui span {
+  cursor: pointer;
+  opacity: 0.4;
+}
+
+.ui span:hover {
+  opacity: 1;
+}
+
+/* メールGIF */
+.mail-trigger {
+  position: fixed;
+  left: 50%;
+  bottom: 18%;
+  transform: translateX(-50%);
+  z-index: 6;
+  pointer-events: auto;
+}
+
+.mail-gif {
+  width: 120px;
+  height: auto;
+  opacity: 0;
+  filter: blur(6px);
+  transition: opacity 0.8s ease, filter 0.8s ease;
+}
+
+/* テキストが半分消えた頃に浮上 */
+body.scrolled-mid .mail-gif {
+  opacity: 1;
+  filter: blur(0);
+}
+
+/* hover 微反応 */
+.mail-trigger:hover .mail-gif {
+  opacity: 1;
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .text {
+    padding: 2rem 1.5rem;
+    font-size: 1.6rem;
+  }
+
+  .studio {
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+
+  .ui {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    font-size: 12px;
+  }
+
+  .mail-gif {
+    width: 90px;
+  }
+}
