@@ -111,6 +111,38 @@ h1 {
   max-width: none !important;
 }
 
+.floating-gifs {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.mail-gif {
+  position: absolute;
+  pointer-events: auto;
+
+  opacity: 0;
+  transform: translateY(28px) scale(0.98);
+
+  transition:
+    opacity 3.5s ease,
+    transform 3.5s ease,
+    left 10s ease,
+    top 10s ease;
+}
+
+.mail-gif.is-visible {
+  opacity: 0.6;
+  transform: translateY(0) scale(1);
+}
+
+/* 👇 ここが今回の重要調整点 */
+.mail-gif img {
+  width: min(500px, max(320px, 60vw));
+  height: auto;
+  display: block;
+}
 
 
 /* --------------------
