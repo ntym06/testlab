@@ -138,7 +138,7 @@ body {
    Preview pane
 -------------------- */
 
-#hoverPreview {
+ #hoverPreview {
   position: fixed;
   top: 4rem;
   right: 4rem;
@@ -146,14 +146,23 @@ body {
   width: 340px;
 
   opacity: 0;
+  transform: translateY(8px);
   pointer-events: none;
-  transition: opacity 0.6s ease;
+
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+#hoverPreview.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 #hoverPreview .image {
   width: 100%;
   aspect-ratio: 4 / 3;
-  background: #eee;
+  background: #ddd;
   background-size: cover;
   background-position: center;
 }
@@ -161,9 +170,9 @@ body {
 #hoverPreview .meta {
   margin-top: 0.8rem;
   font-size: 0.85rem;
-  line-height: 1.5;
   color: #555;
 }
+
 
 /* Mobile */
 @media (max-width: 768px) {
