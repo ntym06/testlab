@@ -291,18 +291,33 @@ animate();
 </script>
 <script>
 /* --------------------
-   Bottom sticky appear on scroll
+   Bottom image scroll logic
 -------------------- */
 const bottomSticky = document.getElementById('bottom-sticky');
 
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 120) {
-    bottomSticky.classList.add('is-visible');
-  } else {
-    bottomSticky.classList.remove('is-visible');
-  }
-});
+function updateBottomImage() {
+  const scrollTop = window.scrollY;
+  const winH = window.innerHeight;
+  const docH = document.documentElement.scrollHeight;
+
+  // 「出現し始めるポイント」
+  const appearStart = docH - winH * 1.6;
+  // 「完全に出るポイント（最下部）」
+  const appearEnd = docH - winH;
+
+  let t = (scrollTop - appearStart) / (appearEnd - appearStart);
+  t = Math.max(0, Math.min(1, t)); // 0〜1に正規化
+
+  // 下からスライドイン
+  const translateY = (1 - t) * 100; // %
+  bottomSticky.style.transform = `translateY(${translateY}%)`;
+}
+
+window.addEventListener('scroll', updateBottomImage);
+window.addEventListener('resize', updateBottomImage);
+updateBottomImage();
 </script>
+
 
 <div id="bottom-sticky">
   <img src="svg/bottom-image.png" alt="">
