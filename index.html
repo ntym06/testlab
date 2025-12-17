@@ -242,12 +242,15 @@ window.addEventListener('resize',()=>randomPosition(mailGif));
 // --------------------
 // Scroll-trigger GIF appearance
 // --------------------
-let mailShown=false;
-window.addEventListener('scroll',()=>{
-  if(!mailShown && scrollY>30){
-    mailGif.classList.add('is-visible');
-    mailShown=true;
+
+   let mailShown = false;
+window.addEventListener('scroll', () => {
+  if (!mailShown && window.scrollY > 30) {
+    mailGif.classList.add('is-visible'); // ふわっと表示
+    mailShown = true;
   }
+});
+
 });
 </script>
 
