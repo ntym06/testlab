@@ -56,14 +56,14 @@ function buildIndex(data) {
           item.className = "work";
           item.textContent = `${d.Year} ${d.Title}`;
 
-          // hover中：画像をパラパラ切り替える
+          // hover中
           item.addEventListener("mouseenter", () => {
             lastHoveredData = d;
-            startPreviewShuffle(d);
+            showPreview(d);
+
           });
 
           item.addEventListener("mouseleave", () => {
-            stopPreviewShuffle();
           });
 
           // クリック（後でモーダル）
@@ -127,20 +127,6 @@ function showPreview(d) {
   preview.classList.add("is-visible");
 }
 
-function startPreviewShuffle(d) {
-  stopPreviewShuffle();
-  showPreview(d);
-
-  hoverTimer = setInterval(() => {
-    showPreview(d);
-  }, 700); // パラパラ速度（調整可）
-}
-
-function stopPreviewShuffle() {
-  if (hoverTimer) {
-    clearInterval(hoverTimer);
-    hoverTimer = null;
-  }
 
   // 最後に触れたプロジェクトを固定表示
   if (lastHoveredData) {
