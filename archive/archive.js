@@ -109,3 +109,42 @@ function showPreview(d) {
 function hidePreview() {
   preview.classList.remove("is-visible");
 }
+const preview = document.getElementById("preview");
+const previewImg = preview.querySelector(".image");
+const previewMeta = preview.querySelector(".meta");
+
+function showPreview(d) {
+  if (!d["Main Project Image"]) return;
+
+  previewImg.style.backgroundImage =
+    `url("${d["Main Project Image"]}")`;
+
+  previewMeta.innerHTML = `
+    <strong>${d.Title}</strong><br>
+    ${d.Year}
+  `;
+
+  preview.classList.add("is-visible");
+}
+
+function startPreviewShuffle(d) {
+  stopPreviewShuffle();
+  showPreview(d);
+
+  hoverTimer = setInterval(() => {
+    showPreview(d);
+  }, 700); // パラパラ速度（調整可）
+}
+
+function stopPreviewShuffle() {
+  if (hoverTimer) {
+    clearInterval(hoverTimer);
+    hoverTimer = null;
+  }
+
+  // 最後に触れたプロジェクトを固定表示
+  if (lastHoveredData) {
+    showPreview(lastHoveredData);
+  }
+}
+
