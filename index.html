@@ -293,29 +293,50 @@ animate();
 /* --------------------
    Bottom image scroll logic
 -------------------- */
+<script>
+/* --------------------
+   Bottom image scroll logic (px based)
+-------------------- */
 const bottomSticky = document.getElementById('bottom-sticky');
+const bottomImg = bottomSticky.querySelector('img');
+
+let imgHeight = 0;
+
+function updateImageHeight() {
+  imgHeight = bottomSticky.getBoundingClientRect().height;
+}
 
 function updateBottomImage() {
   const scrollTop = window.scrollY;
   const winH = window.innerHeight;
   const docH = document.documentElement.scrollHeight;
 
-  // 「出現し始めるポイント」
-  const appearStart = docH - winH * 1.6;
-  // 「完全に出るポイント（最下部）」
+  // 出現開始：かなり下の方
+  const appearStart = docH - winH * 1.3;
+  // 完全に下
   const appearEnd = docH - winH;
 
   let t = (scrollTop - appearStart) / (appearEnd - appearStart);
-  t = Math.max(0, Math.min(1, t)); // 0〜1に正規化
+  t = Math.max(0, Math.min(1, t));
 
-  // 下からスライドイン
-  const translateY = (1 - t) * 100; // %
-  bottomSticky.style.transform = `translateY(${translateY}%)`;
+  // ★ pxで確実に「完全に画面外」から出す
+  const translateY = (1 - t) * imgHeight;
+
+  bottomSticky.style.transform = `translateY(${translateY}px)`;
 }
 
+// 初期化
+window.addEventListener('load', () => {
+  updateImageHeight();
+  updateBottomImage();
+});
+
+window.addEventListener('resize', () => {
+  updateImageHeight();
+  updateBottomImage();
+});
+
 window.addEventListener('scroll', updateBottomImage);
-window.addEventListener('resize', updateBottomImage);
-updateBottomImage();
 </script>
 
 
