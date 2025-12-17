@@ -96,8 +96,8 @@ h1 {
   transform: translateY(30px) scale(0.96);
 
   transition:
-    opacity 3.5s ease,
-    transform 3.5s ease !important;
+    opacity 5.5s ease,
+    transform 5.5s ease !important;
 }
 
 .mail-gif.is-visible {
