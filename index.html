@@ -355,6 +355,59 @@ window.addEventListener('DOMContentLoaded', () => {
 // --------------------
 window.addEventListener('resize', () => randomPosition(mailGif));
 </script>
+/* --------------------
+   Language UI
+-------------------- */
+.ui {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 5;
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  color: rgba(60,60,60,0.65);
+}
+
+/* --------------------
+   Floating GIF
+-------------------- */
+.mail-gif {
+  position: absolute;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: opacity 2.5s ease, transform 2.5s ease;
+  z-index: 4;
+}
+
+.mail-gif.is-visible {
+  opacity: 0.6;
+  transform: translateY(0) scale(1);
+}
+
+/* PCサイズ */
+.mail-gif img {
+  width: 420px;
+  max-width: 70vw;
+  height: auto;
+  display: block;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .mail-gif img {
+    width: 40vw;
+    max-width: 150px;
+    height: auto;
+  }
+  .ui {
+    font-size: 15px;
+    bottom: 1.8rem;
+    right: 1.5rem;
+  }
+}
+</style>
+</head>
 
 
 </body>
