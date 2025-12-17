@@ -118,10 +118,15 @@ h1 {
 }
 
 /* サイズ制御（モバイルで縮みすぎない） */
+
 .mail-gif img {
   width: min(500px, max(320px, 60vw));
-  height: auto;
-  display: block;
+}
+
+@media (max-width: 768px) {
+  .mail-gif img {
+    width: 380px;
+  }
 }
 
 
@@ -129,9 +134,5 @@ h1 {
    Mobile
 -------------------- */
 
-@media (max-width: 768px) {
-  .mail-gif img {
-    width: 380px;
-  }
-}
+
 
