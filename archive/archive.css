@@ -25,5 +25,51 @@ body {
   font-size: 1rem;
   font-weight: normal;
   margin-bottom: 1.5rem;
-  opacity:
+  opacity: 0.6;
+}
 
+/* Work item (text only) */
+.work {
+  cursor: pointer;
+  margin-bottom: 0.8rem;
+  line-height: 1.4;
+}
+
+.work:hover {
+  opacity: 0.6;
+}
+
+.year {
+  margin-right: 0.6rem;
+  opacity: 0.4;
+}
+
+.title {
+  display: inline;
+}
+
+/* Hover preview (single image) */
+#hoverPreview {
+  position: fixed;
+  width: 320px;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 10;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .index {
+    flex-direction: column;
+    gap: 2.5rem;
+    padding: 2rem;
+  }
+
+  #hoverPreview {
+    display: none;
+  }
+}
