@@ -25,40 +25,66 @@ function buildIndex(data) {
     grouped[d.Type].push(d);
   });
 
-  const inner = document.createElement("div");
-  inner.className = "index-inner";
+  const columns = document.createElement("div");
+  columns.className = "index-columns";
+
+  // 左列（上に流れる）
+  const colUp = document.createElement("div");
+  colUp.className = "column up";
+
+  // 右列（下に流れる）
+  const colDown = document.createElement("div");
+  colDown.className = "column down";
+
+  const upInner = document.createElement("div");
+  upInner.className = "column-inner";
+
+  const downInner = document.createElement("div");
+  downInner.className = "column-inner";
 
   Object.keys(grouped).forEach(type => {
-    const section = document.createElement("section");
-    section.className = "genre";
-    section.innerHTML = `<h2>${type}</h2>`;
+    const makeSection = () => {
+      const section = document.createElement("section");
+      section.className = "genre";
+      section.innerHTML = `<h2>${type}</h2>`;
 
-    grouped[type]
-      .sort((a, b) => Number(b.Year) - Number(a.Year))
-      .forEach(d => {
-        const item = document.createElement("div");
-        item.className = "work";
-        item.textContent = `${d.Year} ${d.Title}`;
+      grouped[type]
+        .sort((a, b) => Number(b.Year) - Number(a.Year))
+        .forEach(d => {
+          const item = document.createElement("div");
+          item.className = "work";
+          item.textContent = `${d.Year} ${d.Title}`;
 
-        item.addEventListener("mouseenter", () => {
-          inner.classList.add("is-paused");
-          showPreview(d);
+          item.addEventListener("mouseenter", () => {
+            section.closest(".column").classList.add("is-paused");
+            showPreview(d);
+          });
+
+          item.addEventListener("mouseleave", () => {
+            section.closest(".column").classList.remove("is-paused");
+            hidePreview();
+          });
+
+          section.appendChild(item);
         });
 
-        item.addEventListener("mouseleave", () => {
-          inner.classList.remove("is-paused");
-          hidePreview();
-        });
+      return section;
+    };
 
-        section.appendChild(item);
-      });
-
-    inner.appendChild(section);
+    upInner.appendChild(makeSection());
+    downInner.appendChild(makeSection());
   });
 
-  // 2帯分にして無限ループ風
-  indexEl.appendChild(inner);
-  indexEl.appendChild(inner.cloneNode(true));
+  // 2周分にしてループ
+  colUp.appendChild(upInner);
+  colUp.appendChild(upInner.cloneNode(true));
+
+  colDown.appendChild(downInner);
+  colDown.appendChild(downInner.cloneNode(true));
+
+  columns.appendChild(colUp);
+  columns.appendChild(colDown);
+  indexEl.appendChild(columns);
 }
 
 // --------------------
