@@ -1,171 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Floating GIF Demo</title>
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>nat/yama — under construction</title>
+
 <style>
-/* --------------------
-   Reset
--------------------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+  html, body {
+    margin: 0;
+    height: 200vh;
+    font-family: serif;
+    transition: background 2s ease;
+  }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 200vh;
-  font-family: Georgia, serif;
-  background: linear-gradient(120deg, #f6f4ef, #e9edf1, #f3ede8);
-  background-size: 300% 300%;
-  animation: bgFlow 60s linear infinite;
-}
+  /* 背景用グラデーションアニメーション */
+  body {
+    background: linear-gradient(135deg, #e0f0ff, #cce6ff, #BCEFFD);
+    background-size: 400% 400%;
+    animation: gradientMove 20s ease infinite;
+  }
 
-/* --------------------
-   Background animation
--------------------- */
-@keyframes bgFlow {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-/* --------------------
-   Text block
--------------------- */
-.text {
-  position: fixed;
-  top: 2rem;
-  left: 2rem;
-  max-width: 300px;
-  z-index: 1;
-}
+  /* 溶けるテキスト層 */
+  .text {
+    position: fixed;
+    inset: 0;
+    padding: 4rem;
+    pointer-events: none;
+    transition: opacity 0.6s ease, filter 0.6s ease;
+    color: rgba(60, 60, 60, 0.55);
+    font-size: 1.5rem;
+    line-height: 1.55;
+    z-index: 1;
+  }
 
-/* --------------------
-   Language UI
--------------------- */
-.ui {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 5;
-  font-size: 18px;
-  letter-spacing: 0.18em;
-  color: rgba(60,60,60,0.65);
-}
+  .lang {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
 
-/* --------------------
-   Floating GIF
--------------------- */
-.mail-gif {
-  position: absolute;
-  pointer-events: auto;
-  opacity: 0;
-  transform: translateY(20px) scale(0.95);
-  transition: opacity 2.5s ease, transform 2.5s ease;
-  z-index: 4;
-}
+  .lang.active {
+    opacity: 1;
+  }
 
-.mail-gif.is-visible {
-  opacity: 0.6;
-  transform: translateY(0) scale(1);
-}
+  .studio {
+    display: block;
+    margin-bottom: 3.5rem;
+    font-size: 1.1rem;
+    opacity: 0.45;
+    letter-spacing: 0.02em;
+  }
 
-/* PCサイズ */
-.mail-gif img {
-  width: 420px;
-  max-width: 70vw;
-  height: auto;
-  display: block;
-}
+  /* UI */
+  .ui {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    color: rgba(60,60,60,0.6);
+    z-index: 5;
+  }
 
-/* Mobile */
+  .ui span {
+    cursor: pointer;
+    opacity: 0.4;
+  }
+
+  .ui span:hover {
+    opacity: 1;
+  }
+
+  /* mail GIF */
+  .mail-gif {
+    position: fixed;
+    bottom: 3rem;
+    left: 3rem;
+    z-index: 4;
+
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 2.2s ease, transform 2.2s ease;
+
+    pointer-events: auto;
+  }
+
+  .mail-gif.visible {
+    opacity: 0.6;
+    transform: translateY(0);
+  }
+
+  .mail-gif img {
+    width: 164px;
+    height: auto;
+    display: block;
+  }
+
+  /* mobile */
+  @media (max-width: 768px) {
+    .text {
+      padding: 2rem 1.5rem;
+      font-size: 1.6rem;
+    }
 @media (max-width: 768px) {
   .mail-gif img {
-    width: 40vw;
-    max-width: 150px;
-    height: auto;
-  }
-  .ui {
-    font-size: 15px;
-    bottom: 1.8rem;
-    right: 1.5rem;
+    width: min(80vw, 320px);
   }
 }
+
+    .studio {
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .ui {
+      bottom: 1.5rem;
+      right: 1.5rem;
+      font-size: 12px;
+    }
+
+    .mail-gif {
+      left: 1.5rem;
+      bottom: 2rem;
+    }
+
+  }
 </style>
 </head>
+
 <body>
 
-<div class="text">
-  <p>ここは文章ブロックです。GIFはここに重ならないように表示されます。</p>
+<div class="text" id="text">
+  <span class="studio">nat/yama — under construction</span>
+
+  <p class="lang en active">
+    Berlin-based designer for cultural projects
+  </p>
+  <p class="lang ja">
+    nat/yamaは<br>
+    コンセプト設計から表現まで手がける<br>
+    アートディレクターです
+  </p>
+  <p class="lang de">
+    Kultur- und Mediengestalterin<br>
+    für Bildungs- und Kontextprojekte
+  </p>
 </div>
 
-<div class="ui">EN | JP | DE</div>
+<div class="ui">
+  <span data-lang="en">EN</span> |
+  <span data-lang="ja">JP</span> |
+  <span data-lang="de">DE</span>
+</div>
 
 <a href="mailto:n@natyama.com" class="mail-gif" aria-label="contact">
   <img src="svg/email-animation.gif" alt="contact mail">
 </a>
 
 <script>
-// --------------------
-// ランダム配置関数
-// --------------------
+const langs = document.querySelectorAll('.lang');
+const text = document.getElementById('text');
+const buttons = document.querySelectorAll('.ui span');
 const mailGif = document.querySelector('.mail-gif');
+
+/* 言語ごとの淡いグラデーションパレット */
+const bgGradients = {
+  en: ['#e0f0ff', '#cce6ff', '#BCEFFD'],
+  ja: ['#fff7e6', '#fff0cc', '#ffe6b3'],
+  de: ['#f0fff0', '#dfffe0', '#cce6cc']
+};
+
+let currentLang =
+  navigator.language.startsWith('ja') ? 'ja' :
+  navigator.language.startsWith('de') ? 'de' : 'en';
+
+let gradientIndex = 0;
+let mailShown = false;
+
+/* 言語切替 */
+function setLang(lang) {
+  langs.forEach(l => l.classList.remove('active'));
+  document.querySelector('.lang.' + lang).classList.add('active');
+  currentLang = lang;
+
+  const colors = bgGradients[lang];
+  document.body.style.background =
+    `linear-gradient(135deg, ${colors.join(',')})`;
+  document.body.style.backgroundSize = '400% 400%';
+
+  text.style.opacity = 1;
+  text.style.filter = 'blur(0px)';
+}
+
+buttons.forEach(b => {
+  b.onclick = () => setLang(b.dataset.lang);
+});
+
+/* グラデーション推移 */
+function animateGradient() {
+  const colors = bgGradients[currentLang];
+  gradientIndex = (gradientIndex + 1) % colors.length;
+  document.body.style.background =
+    `linear-gradient(135deg, ${colors[gradientIndex]}, ${colors[(gradientIndex + 1) % colors.length]})`;
+  document.body.style.backgroundSize = '400% 400%';
+
+  setTimeout(animateGradient, 6000);
+}
+
+/* スクロール演出 */
+window.addEventListener('scroll', () => {
+  const t = Math.min(scrollY / 400, 1);
+  text.style.opacity = 1 - t;
+  text.style.filter = `blur(${t * 6}px)`;
+
+  if (!mailShown && scrollY > 30) {
+    mailGif.classList.add('visible');
+    mailShown = true;
+  }
+});
+
+/* 初期化 */
+setLang(currentLang);
+animateGradient();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const gifs = document.querySelectorAll('.mail-gif');
+  let started = false;
 
 function randomPosition(el) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
+
   const rect = el.getBoundingClientRect();
-  const w = rect.width;
-  const h = rect.height;
+  const w = rect.width || 300;
+  const h = rect.height || 300;
 
-  // 安全領域を%で設定（左上テキストを避ける）
-  const safeX = vw * 0.2;  // 左20%避ける
-  const safeY = vh * 0.15; // 上15%避ける
+  /* 文字エリア（左上）を避けるためのマージン */
+  const safeLeft = vw * 0.45;   // 左45%は避ける
+  const safeTop = vh * 0.55;    // 上55%は避ける
 
-  const maxX = vw - w;
-  const maxY = vh - h;
+  const minX = safeLeft;
+  const minY = safeTop;
 
-  const x = safeX + Math.random() * (maxX - safeX);
-  const y = safeY + Math.random() * (maxY - safeY);
+  const maxX = Math.max(minX, vw - w);
+  const maxY = Math.max(minY, vh - h);
+
+  const x = minX + Math.random() * (maxX - minX);
+  const y = minY + Math.random() * (maxY - minY);
 
   el.style.left = `${x}px`;
   el.style.top = `${y}px`;
 }
 
-// --------------------
-// フェードアウト→再配置→フェードイン
-// --------------------
-function floatGif(el, interval=10000) {
-  setInterval(() => {
-    el.classList.remove('is-visible'); // フェードアウト
-    setTimeout(() => {
-      randomPosition(el);                // 再配置
-      el.classList.add('is-visible');    // フェードイン
-    }, 800);
-  }, interval);
 }
 
-// --------------------
-// 初期化
-// --------------------
-window.addEventListener('DOMContentLoaded', () => {
-  randomPosition(mailGif);
 
-  // 初期フェードイン
-  setTimeout(() => mailGif.classList.add('is-visible'), 800);
+  function start() {
+    gifs.forEach((gif, i) => {
+      // 初期位置（非表示）
+      randomPosition(gif);
 
-  // 浮遊開始
-  floatGif(mailGif, 11000);
+      // スクロール後、時間差で出現
+      setTimeout(() => {
+        gif.classList.add('is-visible');
+      }, 800 + i * 900);
+
+      // 漂い続ける
+      setInterval(() => {
+        randomPosition(gif);
+      }, 11000 + i * 2500);
+    });
+  }
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.mail-gif').forEach(el => {
+    randomPosition(el);
+  });
 });
 
-// --------------------
-// リサイズ時も再配置
-// --------------------
-window.addEventListener('resize', () => randomPosition(mailGif));
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!started) {
+        started = true;
+        start();
+      }
+    },
+    { once: true }
+  );
+});
 </script>
 
 </body>
