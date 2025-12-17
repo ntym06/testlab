@@ -1,34 +1,40 @@
 /* --------------------
-   Reset
+   Reset (stricter)
 -------------------- */
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
+html {
   height: 100%;
-  font-family: serif;
 }
 
-/* --------------------
-   Background animation
--------------------- */
-
 body {
+  min-height: 100%;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  color: #111;
+
+  /* background animation */
   background: linear-gradient(
     120deg,
     #f6f4ef,
     #e9edf1,
     #f3ede8
   );
-  background-size: 400% 400%;
-  animation: bgFlow 40s ease-in-out infinite;
-  color: #111;
+  background-size: 300% 300%;
+  animation: bgFlow 60s linear infinite;
+
+  /* Chrome安定化 */
+  display: flex;
 }
+
+/* --------------------
+   Background animation
+-------------------- */
 
 @keyframes bgFlow {
   0%   { background-position: 0% 50%; }
@@ -37,35 +43,41 @@ body {
 }
 
 /* --------------------
-   Layout
+   Layout (critical fix)
 -------------------- */
 
 .container {
+  width: 100%;
   min-height: 100vh;
-  padding: 4rem;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  padding: 4rem;
+
+  /* Chrome text rendering fix */
+  transform: translateZ(0);
 }
 
 .text {
   max-width: 640px;
 }
 
-h1 {
-  font-size: 1.2rem;
-  font-weight: normal;
-  margin-bottom: 1.5rem;
-}
-
 /* --------------------
-   Language handling
+   Typography
 -------------------- */
+
+h1 {
+  font-size: 1.1rem;
+  font-weight: normal;
+  margin-bottom: 1.6rem;
+}
 
 .lang {
   display: none;
-  line-height: 1.7;
   font-size: 1rem;
+  line-height: 1.8;
 }
 
 .lang.active {
@@ -77,14 +89,19 @@ h1 {
 -------------------- */
 
 .email-link {
-  display: inline-block;
-  width: 200px;
+  width: 220px;
+  display: block;
 }
 
 .email-gif {
   width: 100%;
+  display: block;
+
   opacity: 0.85;
   transition: opacity 1.2s ease;
+
+  /* Chrome image stability */
+  image-rendering: auto;
 }
 
 .email-link:hover .email-gif {
