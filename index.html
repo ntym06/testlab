@@ -226,6 +226,30 @@ window.addEventListener('scroll', () => {
 setLang(currentLang);
 animateGradient();
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const mail = document.querySelector('.mail-gif');
+  if (!mail) return;
+
+  const margin = 40; // 端からの余白
+  const gifWidth = 500;
+  const gifHeight = 300; // だいたいでOK
+
+  const maxX = window.innerWidth - gifWidth - margin;
+  const maxY = window.innerHeight - gifHeight - margin;
+
+  const randomX = Math.max(margin, Math.random() * maxX);
+  const randomY = Math.max(margin, Math.random() * maxY);
+
+  mail.style.left = `${randomX}px`;
+  mail.style.top = `${randomY}px`;
+
+  // 少し間を置いてふわっと出す
+  requestAnimationFrame(() => {
+    mail.classList.add('is-visible');
+  });
+});
+</script>
 
 </body>
 </html>
