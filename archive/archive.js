@@ -80,33 +80,27 @@ function bindHover() {
 
   works.forEach(work => {
     work.addEventListener("mouseenter", () => {
-      const rect = work.getBoundingClientRect();
       const img = work.dataset.image;
       const title = work.querySelector(".title")?.textContent || "";
       const year = work.querySelector(".year")?.textContent || "";
 
-      // image
-      previewImg.style.backgroundImage = `url("${img}")`;
+      if (!img) return;
 
-      // meta
+      previewImg.style.backgroundImage = `url("${img}")`;
       previewMeta.innerHTML = `
         <strong>${title}</strong><br>
         ${year}
       `;
 
-      // 該当タイトルだけ避ける位置調整
-      preview.style.top = `${Math.max(64, rect.top - 40)}px`;
-
-      // fade in
-      preview.style.opacity = 1;
+      preview.classList.add("is-visible");
     });
 
     work.addEventListener("mouseleave", () => {
-      preview.style.opacity = 0;
+      preview.classList.remove("is-visible");
     });
 
     work.addEventListener("click", () => {
-      // worksページ接続（今は無効でOK）
+      // 今は未接続でOK
       // window.location.href = work.dataset.link;
     });
   });
