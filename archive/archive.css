@@ -15,11 +15,14 @@ body {
 /* --------------------
    Index columns
 -------------------- */
+/* ====================
+   Index layout
+==================== */
 .index {
   position: relative;
   height: 100vh;
   padding: 4rem;
-  padding-right: 420px;
+  padding-right: 520px; /* プレビュー大きくする分 */
   overflow: hidden;
 }
 
@@ -28,10 +31,51 @@ body {
   gap: 4rem;
 }
 
+/* 各列 */
 .column {
-  width: 300px;
+  width: 280px;
   overflow: hidden;
 }
+
+.column-inner {
+  display: block;
+}
+
+/* 初期状態の流れ方向 */
+.left-column .column-inner {
+  animation: scrollDown 90s linear infinite;
+}
+
+.right-column .column-inner {
+  animation: scrollUp 90s linear infinite;
+}
+
+@keyframes scrollUp {
+  from { transform: translateY(-50%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes scrollDown {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
+/* work title */
+.work {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  margin-bottom: 0.6rem;
+  cursor: pointer;
+  transition: font-weight 0.25s ease, letter-spacing 0.25s ease;
+}
+
+/* ホバー中の表情 */
+.work:hover {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}
+
 
 /* columns */
 .column.up .column-inner {
