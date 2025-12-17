@@ -9,13 +9,14 @@ const indexEl = document.getElementById("index");
 const previewEl = document.getElementById("hoverPreview");
 
 // CSV読み込み
-Papa.parse("./portfolio.csv", {
+  Papa.parse("./portfolio.csv?ts=" + Date.now(), {
   download: true,
   header: true,
   skipEmptyLines: true,
   complete: function (results) {
     const data = results.data.filter(d => d.Title && d.Type && d.Year);
     buildIndex(data);
+  
   },
   error: function (err) {
     console.error("CSV load error:", err);
