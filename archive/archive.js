@@ -16,6 +16,9 @@ Papa.parse("./portfolio.csv?ts=" + Date.now(), {
 // --------------------
 // Build index
 // --------------------
+let hoverTimer = null;
+let lastHoveredData = null;
+
 function buildIndex(data) {
   const grouped = {};
 
@@ -28,25 +31,23 @@ function buildIndex(data) {
   const columns = document.createElement("div");
   columns.className = "index-columns";
 
-  // 左列（上に流れる）
-  const colUp = document.createElement("div");
-  colUp.className = "column up";
+  const leftCol = document.createElement("div");
+  leftCol.className = "column left-column";
 
-  // 右列（下に流れる）
-  const colDown = document.createElement("div");
-  colDown.className = "column down";
+  const rightCol = document.createElement("div");
+  rightCol.className = "column right-column";
 
-  const upInner = document.createElement("div");
-  upInner.className = "column-inner";
+  const leftInner = document.createElement("div");
+  leftInner.className = "column-inner";
 
-  const downInner = document.createElement("div");
-  downInner.className = "column-inner";
+  const rightInner = document.createElement("div");
+  rightInner.className = "column-inner";
 
   Object.keys(grouped).forEach(type => {
     const makeSection = () => {
-      const section = document.createElement("section");
-      section.className = "genre";
-      section.innerHTML = `<h2>${type}</h2>`;
+      const sec = document.createElement("section");
+      sec.className = "genre";
+      sec.innerHTML = `<h2>${type}</h2>`;
 
       grouped[type]
         .sort((a, b) => Number(b.Year) - Number(a.Year))
@@ -55,35 +56,36 @@ function buildIndex(data) {
           item.className = "work";
           item.textContent = `${d.Year} ${d.Title}`;
 
+          // hover中：画像をパラパラ切り替える
           item.addEventListener("mouseenter", () => {
-            section.closest(".column").classList.add("is-paused");
-            showPreview(d);
+            lastHoveredData = d;
+            startPreviewShuffle(d);
           });
 
           item.addEventListener("mouseleave", () => {
-            section.closest(".column").classList.remove("is-paused");
-            hidePreview();
+            stopPreviewShuffle();
           });
 
-          section.appendChild(item);
+          // クリック（後でモーダル）
+          item.addEventListener("click", () => {
+            // openWorkModal(d);
+          });
+
+          sec.appendChild(item);
         });
 
-      return section;
+      return sec;
     };
 
-    upInner.appendChild(makeSection());
-    downInner.appendChild(makeSection());
+    leftInner.appendChild(makeSection());
+    rightInner.appendChild(makeSection());
   });
 
-  // 2周分にしてループ
-  colUp.appendChild(upInner);
-  colUp.appendChild(upInner.cloneNode(true));
+  // 無限ループ用に複製
+  leftCol.append(leftInner, leftInner.cloneNode(true));
+  rightCol.append(rightInner, rightInner.cloneNode(true));
 
-  colDown.appendChild(downInner);
-  colDown.appendChild(downInner.cloneNode(true));
-
-  columns.appendChild(colUp);
-  columns.appendChild(colDown);
+  columns.append(leftCol, rightCol);
   indexEl.appendChild(columns);
 }
 
