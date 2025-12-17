@@ -289,6 +289,21 @@ function setLang(lang){
 // 初期化
 animate();
 </script>
+<script>
+/* --------------------
+   Bottom sticky appear on scroll
+-------------------- */
+const bottomSticky = document.getElementById('bottom-sticky');
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 120) {
+    bottomSticky.classList.add('is-visible');
+  } else {
+    bottomSticky.classList.remove('is-visible');
+  }
+});
+</script>
+
 <div id="bottom-sticky">
   <img src="svg/bottom-image.gif" alt="">
 </div>
