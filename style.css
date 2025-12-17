@@ -83,6 +83,17 @@ h1 {
 .lang.active {
   display: block;
 }
+.ui {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 5;
+
+  font-size: 18px;      /* ← ここが本体 */
+  letter-spacing: 0.18em;
+  color: rgba(60,60,60,0.65);
+}
+
 
 /* --------------------
    Email GIF
