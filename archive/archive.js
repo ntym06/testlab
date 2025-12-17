@@ -7,9 +7,7 @@
 const indexEl = document.getElementById("index");
 const previewEl = document.getElementById("hoverPreview");
 
-// ------------------------------------
-// Load CSV with PapaParse
-// ------------------------------------
+// CSV読み込み
 Papa.parse("./portfolio.csv", {
   download: true,
   header: true,
@@ -23,9 +21,7 @@ Papa.parse("./portfolio.csv", {
   }
 });
 
-// ------------------------------------
-// Build index grouped by genre
-// ------------------------------------
+// ジャンル別に構築
 function buildIndex(data) {
   const grouped = {};
 
@@ -65,9 +61,7 @@ function buildIndex(data) {
   bindHover();
 }
 
-// ------------------------------------
-// Hover preview logic
-// ------------------------------------
+// ホバープレビュー
 function bindHover() {
   const works = document.querySelectorAll(".work");
 
@@ -81,9 +75,19 @@ function bindHover() {
       }
 
       previewEl.style.left = `${rect.left}px`;
-      previewEl.style.top = `${rect.top - previewEl.offsetHeight - 12}px`;
+      previewEl.style.top =
+        `${rect.top - previewEl.offsetHeight - 12}px`;
       previewEl.style.opacity = 1;
     });
 
-    work.addE
+    work.addEventListener("mouseleave", () => {
+      previewEl.style.opacity = 0;
+    });
 
+    work.addEventListener("click", () => {
+      if (work.dataset.link) {
+        window.location.href = work.dataset.link;
+      }
+    });
+  });
+}
