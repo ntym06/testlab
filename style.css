@@ -93,18 +93,26 @@ h1 {
   left: 10rem;
   z-index: 4;
 
-  opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(20px, -10px); /* x, y */
   transition: opacity 0.8s ease, transform 0.8s ease;
 
   pointer-events: auto;
 }
 
+
 .mail-gif img {
-  width: 164px;
-  height: auto;
-  display: block;
+  width: clamp(100px, 10vw, 180px);
 }
+
+.mail-gif {
+  opacity: 0.3;
+  transition: opacity 0.4s ease;
+}
+
+.mail-gif:hover {
+  opacity: 0.6;
+}
+
 
 /* --------------------
    Mobile
