@@ -239,20 +239,27 @@ function randomPosition(el) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
-  // 実寸取得（未表示でも取れる）
   const rect = el.getBoundingClientRect();
   const w = rect.width || 300;
   const h = rect.height || 300;
 
-  // 完全に画面内に収める範囲
-  const maxX = Math.max(0, vw - w);
-  const maxY = Math.max(0, vh - h);
+  /* 文字エリア（左上）を避けるためのマージン */
+  const safeLeft = vw * 0.45;   // 左45%は避ける
+  const safeTop = vh * 0.55;    // 上55%は避ける
 
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
+  const minX = safeLeft;
+  const minY = safeTop;
+
+  const maxX = Math.max(minX, vw - w);
+  const maxY = Math.max(minY, vh - h);
+
+  const x = minX + Math.random() * (maxX - minX);
+  const y = minY + Math.random() * (maxY - minY);
 
   el.style.left = `${x}px`;
   el.style.top = `${y}px`;
+}
+
 }
 
 
