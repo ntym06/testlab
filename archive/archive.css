@@ -1,1 +1,29 @@
+/* --------------------
+   Archive base
+-------------------- */
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  background: #fff;
+  color: #111;
+}
+
+.index {
+  display: flex;
+  gap: 4rem;
+  padding: 4rem;
+}
+
+/* Genre column */
+.genre {
+  flex: 1;
+  min-width: 220px;
+}
+
+.genre h2 {
+  font-size: 1rem;
+  font-weight: normal;
+  margin-bottom: 1.5rem;
+  opacity:
 
