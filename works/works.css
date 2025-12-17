@@ -41,3 +41,24 @@ body {
 .meta {
   scroll-snap-align: start;
 }
+.work {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.slide,
+.meta {
+  height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide img {
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
