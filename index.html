@@ -211,16 +211,23 @@ function animateGradient() {
 }
 
 /* スクロール演出 */
+<script>
+/* スクロール演出（シンプル版） */
 window.addEventListener('scroll', () => {
-  const t = Math.min(scrollY / 400, 1);
+  const maxScroll = 400;
+  const y = Math.min(scrollY, maxScroll);
+  const t = y / maxScroll;
+
+  /* テキスト：溶ける */
   text.style.opacity = 1 - t;
   text.style.filter = `blur(${t * 6}px)`;
 
-  if (!mailShown && scrollY > 30) {
-    mailGif.classList.add('visible');
-    mailShown = true;
-  }
+  /* GIF：スクロール進度でゆっくり現れる */
+  mailGif.style.opacity = (t * 0.85).toFixed(2);
+  mailGif.style.transform = `translateY(${12 - t * 12}px)`;
 });
+</script>
+
 
 /* 初期化 */
 setLang(currentLang);
