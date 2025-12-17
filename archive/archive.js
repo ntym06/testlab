@@ -3,6 +3,7 @@
 // CSV → Genre → Year(desc)
 // Hover preview on title
 // ------------------------------------
+console.log("archive.js loaded");
 
 const indexEl = document.getElementById("index");
 const previewEl = document.getElementById("hoverPreview");
