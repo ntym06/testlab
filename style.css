@@ -133,6 +133,13 @@ h1 {
 /* --------------------
    Mobile
 -------------------- */
+@media (max-width: 768px) {
+  .ui {
+    font-size: 15px;
+    bottom: 1.8rem;
+    right: 1.5rem;
+  }
+}
 
 
 
