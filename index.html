@@ -297,6 +297,65 @@ window.addEventListener('resize', () => {
   );
 });
 </script>
+  <script>
+// --------------------
+// ランダム配置関数
+// --------------------
+const mailGif = document.querySelector('.mail-gif');
+
+function randomPosition(el) {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const rect = el.getBoundingClientRect();
+  const w = rect.width;
+  const h = rect.height;
+
+  // 安全領域を%で設定（左上テキストを避ける）
+  const safeX = vw * 0.2;  // 左20%避ける
+  const safeY = vh * 0.15; // 上15%避ける
+
+  const maxX = vw - w;
+  const maxY = vh - h;
+
+  const x = safeX + Math.random() * (maxX - safeX);
+  const y = safeY + Math.random() * (maxY - safeY);
+
+  el.style.left = `${x}px`;
+  el.style.top = `${y}px`;
+}
+
+// --------------------
+// フェードアウト→再配置→フェードイン
+// --------------------
+function floatGif(el, interval=10000) {
+  setInterval(() => {
+    el.classList.remove('is-visible'); // フェードアウト
+    setTimeout(() => {
+      randomPosition(el);                // 再配置
+      el.classList.add('is-visible');    // フェードイン
+    }, 800);
+  }, interval);
+}
+
+// --------------------
+// 初期化
+// --------------------
+window.addEventListener('DOMContentLoaded', () => {
+  randomPosition(mailGif);
+
+  // 初期フェードイン
+  setTimeout(() => mailGif.classList.add('is-visible'), 800);
+
+  // 浮遊開始
+  floatGif(mailGif, 11000);
+});
+
+// --------------------
+// リサイズ時も再配置
+// --------------------
+window.addEventListener('resize', () => randomPosition(mailGif));
+</script>
+
 
 </body>
 </html>
