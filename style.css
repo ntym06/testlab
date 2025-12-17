@@ -89,29 +89,29 @@ h1 {
 -------------------- */
 .mail-gif {
   position: fixed;
-  bottom: 8rem;
-  left: 10rem;
   z-index: 4;
 
-  transform: translateY(20px, -10px); /* x, y */
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  /* 表示サイズ・見え方 */
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+  transition:
+    opacity 1.2s ease,
+    transform 1.2s ease;
 
-  pointer-events: auto;
+  pointer-events: none; /* 背景要素として */
 }
 
+.mail-gif.is-visible {
+  opacity: 0.6; /* 60%透過 */
+  transform: translateY(0) scale(1);
+}
 
 .mail-gif img {
-  width: clamp(100px, 10vw, 180px);
+  width: 500px;
+  height: auto;
+  display: block;
 }
 
-.mail-gif {
-  opacity: 0.3;
-  transition: opacity 0.4s ease;
-}
-
-.mail-gif:hover {
-  opacity: 0.6;
-}
 
 
 /* --------------------
