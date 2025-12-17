@@ -1,152 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>nat/yama — under construction</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nat/yama — under construction</title>
 
-<style>
-  html, body {
-    margin: 0;
-    height: 200vh;
-    font-family: serif;
-    /* CSSだけで滑らかに流れるグラデーション背景 */
-    background: linear-gradient(135deg, #e0f0ff, #cce6ff, #b3dbff, #e0f0ff);
-    background-size: 400% 400%;
-    animation: gradientFlow 30s ease infinite;
-  }
-
-  @keyframes gradientFlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  /* テキスト */
-  .text {
-    position: fixed;
-    inset: 0;
-    padding: 4rem;
-    pointer-events: none;
-    transition: opacity 0.6s ease, filter 0.6s ease;
-    color: rgba(60,60,60,0.55);
-    font-size: 1.5rem;
-    line-height: 1.55;
-  }
-
-  .lang { opacity: 0; transition: opacity 0.8s ease; }
-  .lang.active { opacity: 1; }
-
-  .studio {
-    display: block;
-    margin-bottom: 3.5rem;
-    font-size: 1.1rem;
-    opacity: 0.45;
-    letter-spacing: 0.02em;
-  }
-
-  /* UI */
-  .ui {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    font-size: 14px;
-    letter-spacing: 0.12em;
-    color: rgba(60,60,60,0.6);
-  }
-  .ui span { cursor: pointer; opacity: 0.4; }
-  .ui span:hover { opacity: 1; }
-
-  /* GIFアニメーション */
-  #emailGif {
-    display: block;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: auto;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-    z-index: 10;
-  }
-
-  #emailGif img {
-    width: 120px;
-    height: auto;
-    background: transparent;
-  }
-
-  /* mobile */
-  @media (max-width: 768px) {
-    .text { padding: 2rem 1.5rem; font-size: 1.6rem; }
-    .studio { margin-bottom: 2rem; font-size: 0.95rem; }
-    .ui { bottom: 1.5rem; right: 1.5rem; font-size: 12px; }
-  }
-</style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-<div class="text" id="text">
-  <span class="studio">nat/yama — under construction</span>
+  <!-- テキストレイヤー -->
+  <div class="text" id="text">
+    <span class="studio">nat/yama — under construction</span>
 
-  <p class="lang en active">
-    Berlin-based designer<br>
-    for cultural projects
-  </p>
-  <p class="lang ja">
-    nat/yama はコンセプト設計から表現まで手がける<br>
-    アートディレクターです
-  </p>
-  <p class="lang de">
-    Kultur- und Mediengestalterin<br>
-    für Bildungs- und Kontextprojekte
-  </p>
-</div>
+    <p class="lang en active">
+      Berlin-based graphic designer<br>
+      for cultural and educational projects
+    </p>
 
-<!-- GIF -->
-<a href="mailto:your.email@example.com" id="emailGif">
-  <img src="assets/svg/email-animation.gif" alt="メールアイコン" />
-</a>
+    <p class="lang ja">
+      nat/yama はコンセプト設計から表現まで手がける<br>
+      アートディレクターです<br>
+      思考を文脈化し、体験へと編み直します
+    </p>
 
-<div class="ui">
-  <span data-lang="en">EN</span> |
-  <span data-lang="ja">JP</span> |
-  <span data-lang="de">DE</span>
-</div>
+    <p class="lang de">
+      Kultur- und Mediengestalterin in Berlin<br>
+      für Bildungs- und Kontextprojekte
+    </p>
+  </div>
 
-<script>
-const text = document.getElementById('text');
-const langs = document.querySelectorAll('.lang');
-const buttons = document.querySelectorAll('.ui span');
-const emailGif = document.getElementById('emailGif');
+  <!-- メールGIF（全言語共通） -->
+  <a href="mailto:hello@natyama.com" class="mail-trigger">
+    <img
+      src="svg/email-animation.gif"
+      alt="contact"
+      class="mail-gif"
+    />
+  </a>
 
-// 言語切替
-let currentLang = navigator.language.startsWith('ja') ? 'ja' :
-                  navigator.language.startsWith('de') ? 'de' : 'en';
+  <!-- 言語UI -->
+  <div class="ui">
+    <span data-lang="en">EN</span> |
+    <span data-lang="ja">JP</span> |
+    <span data-lang="de">DE</span>
+  </div>
 
-function setLang(lang) {
-  langs.forEach(l => l.classList.remove('active'));
-  document.querySelector('.lang.' + lang).classList.add('active');
-  currentLang = lang;
-  text.style.opacity = 1;
-  text.style.filter = 'blur(0px)';
-}
+  <script>
+    const text = document.getElementById('text');
+    const langs = document.querySelectorAll('.lang');
+    const buttons = document.querySelectorAll('.ui span');
 
-buttons.forEach(b => { b.onclick = () => setLang(b.dataset.lang); });
+    function setLang(lang) {
+      langs.forEach(l => l.classList.remove('active'));
+      document.querySelector('.lang.' + lang).classList.add('active');
+    }
 
-// スクロールで文字が溶け、GIFフェードイン
-window.addEventListener('scroll', () => {
-  const t = Math.min(scrollY / 400, 1);
-  text.style.opacity = 1 - t;
-  text.style.filter = `blur(${t * 6}px)`;
+    const initial =
+      navigator.language.startsWith('ja') ? 'ja' :
+      navigator.language.startsWith('de') ? 'de' : 'en';
 
-  // 半分消えたらGIF浮かび上がる
-  emailGif.style.opacity = t > 0.5 ? 1 : 0;
-});
+    setLang(initial);
 
-setLang(currentLang);
-</script>
+    buttons.forEach(b => {
+      b.onclick = () => setLang(b.dataset.lang);
+    });
+
+    // スクロールでテキストが溶け、途中でGIFが浮上
+    window.addEventListener('scroll', () => {
+      const t = Math.min(window.scrollY / 400, 1);
+
+      text.style.opacity = 1 - t;
+      text.style.filter = `blur(${t * 6}px)`;
+
+      if (t > 0.45 && t < 0.85) {
+        document.body.classList.add('scrolled-mid');
+      } else {
+        document.body.classList.remove('scrolled-mid');
+      }
+    });
+  </script>
 
 </body>
 </html>
