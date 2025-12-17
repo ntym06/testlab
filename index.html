@@ -36,6 +36,7 @@
     color: rgba(60, 60, 60, 0.55);
     font-size: 1.5rem;
     line-height: 1.55;
+    z-index: 1;
   }
 
   .lang {
@@ -63,6 +64,7 @@
     font-size: 14px;
     letter-spacing: 0.12em;
     color: rgba(60,60,60,0.6);
+    z-index: 5;
   }
 
   .ui span {
@@ -72,6 +74,31 @@
 
   .ui span:hover {
     opacity: 1;
+  }
+
+  /* mail GIF */
+  .mail-gif {
+    position: fixed;
+    bottom: 3rem;
+    left: 3rem;
+    z-index: 4;
+
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+
+    pointer-events: auto;
+  }
+
+  .mail-gif.visible {
+    opacity: 0.85;
+    transform: translateY(0);
+  }
+
+  .mail-gif img {
+    width: 64px;
+    height: auto;
+    display: block;
   }
 
   /* mobile */
@@ -90,6 +117,15 @@
       bottom: 1.5rem;
       right: 1.5rem;
       font-size: 12px;
+    }
+
+    .mail-gif {
+      left: 1.5rem;
+      bottom: 2rem;
+    }
+
+    .mail-gif img {
+      width: 52px;
     }
   }
 </style>
@@ -120,72 +156,76 @@
   <span data-lang="de">DE</span>
 </div>
 
+<a href="mailto:n@natyama.com" class="mail-gif" aria-label="contact">
+  <img src="svg/email-animation.gif" alt="contact mail">
+</a>
+
 <script>
 const langs = document.querySelectorAll('.lang');
 const text = document.getElementById('text');
 const buttons = document.querySelectorAll('.ui span');
+const mailGif = document.querySelector('.mail-gif');
 
-// 言語ごとの淡いグラデーションパレット
+/* 言語ごとの淡いグラデーションパレット */
 const bgGradients = {
-  en: ['#e0f0ff', '#cce6ff', '#BCEFFD'], // 青系
-  ja: ['#fff7e6', '#fff0cc', '#ffe6b3'], // オレンジ〜黄系
-  de: ['#f0fff0', '#dfffe0', '#cce6cc']  // 緑系
+  en: ['#e0f0ff', '#cce6ff', '#BCEFFD'],
+  ja: ['#fff7e6', '#fff0cc', '#ffe6b3'],
+  de: ['#f0fff0', '#dfffe0', '#cce6cc']
 };
 
-let currentLang = navigator.language.startsWith('ja') ? 'ja' :
-                  navigator.language.startsWith('de') ? 'de' : 'en';
+let currentLang =
+  navigator.language.startsWith('ja') ? 'ja' :
+  navigator.language.startsWith('de') ? 'de' : 'en';
 
 let gradientIndex = 0;
+let mailShown = false;
 
-// 言語切替関数
+/* 言語切替 */
 function setLang(lang) {
   langs.forEach(l => l.classList.remove('active'));
   document.querySelector('.lang.' + lang).classList.add('active');
   currentLang = lang;
 
-  // 背景を最初の色にリセットしてアニメーション再開
   const colors = bgGradients[lang];
-  document.body.style.background = `linear-gradient(135deg, ${colors.join(',')})`;
+  document.body.style.background =
+    `linear-gradient(135deg, ${colors.join(',')})`;
   document.body.style.backgroundSize = '400% 400%';
-  gradientIndex = 0;
 
   text.style.opacity = 1;
   text.style.filter = 'blur(0px)';
 }
 
-// 言語ボタンクリック
 buttons.forEach(b => {
   b.onclick = () => setLang(b.dataset.lang);
 });
 
-// グラデーションをスムーズに推移させるアニメーション
+/* グラデーション推移 */
 function animateGradient() {
   const colors = bgGradients[currentLang];
-  const nextIndex = (gradientIndex + 1) % colors.length;
-  const color1 = colors[gradientIndex];
-  const color2 = colors[nextIndex];
-
-  document.body.style.background = `linear-gradient(135deg, ${color1}, ${color2})`;
+  gradientIndex = (gradientIndex + 1) % colors.length;
+  document.body.style.background =
+    `linear-gradient(135deg, ${colors[gradientIndex]}, ${colors[(gradientIndex + 1) % colors.length]})`;
   document.body.style.backgroundSize = '400% 400%';
 
-  gradientIndex = nextIndex;
-  setTimeout(animateGradient, 6000); // 6秒ごとに切り替え
+  setTimeout(animateGradient, 6000);
 }
 
-// スクロールで文字が溶けるエフェクト
+/* スクロール演出 */
 window.addEventListener('scroll', () => {
   const t = Math.min(scrollY / 400, 1);
   text.style.opacity = 1 - t;
   text.style.filter = `blur(${t * 6}px)`;
+
+  if (!mailShown && scrollY > 30) {
+    mailGif.classList.add('visible');
+    mailShown = true;
+  }
 });
 
-// 初期設定
+/* 初期化 */
 setLang(currentLang);
 animateGradient();
 </script>
-<a href="mailto:n@natyama.com" class="mail-gif" aria-label="contact">
-  <img src="svg/email-animation.gif" alt="contact mail">
-</a>
 
 </body>
 </html>
