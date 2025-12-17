@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>nat/yama — under construction</title>
-
 <style>
 /* --------------------
    Reset
@@ -20,8 +19,8 @@ html, body {
   font-family: Georgia, "Times New Roman", serif;
   color: #111;
   display: flex;
-  transition: background 2s ease;
 }
+
 /* --------------------
    Background animation
 -------------------- */
@@ -66,7 +65,7 @@ body {
 }
 
 /* --------------------
-   UI
+   Language UI
 -------------------- */
 .ui {
   position: fixed;
@@ -86,7 +85,7 @@ body {
 }
 
 /* --------------------
-   Mail GIF
+   Floating GIF
 -------------------- */
 .mail-gif {
   position: absolute;
@@ -125,26 +124,24 @@ body {
     right: 1.5rem;
   }
   .mail-gif img {
-    width: 40vw;
+    width: 50vw;
     max-width: 150px;
   }
 }
 </style>
 </head>
-
 <body>
 
 <div class="text" id="text">
   <span class="studio">nat/yama — under construction</span>
-
   <p class="lang en active">Berlin-based designer for cultural projects</p>
   <p class="lang ja">nat/yamaは<br>コンセプト設計から表現まで手がける<br>アートディレクターです</p>
   <p class="lang de">Kultur- und Mediengestalterin<br>für Bildungs- und Kontextprojekte</p>
 </div>
 
 <div class="ui">
-  <span data-lang="en">EN</span> | 
-  <span data-lang="ja">JP</span> | 
+  <span data-lang="en">EN</span> |
+  <span data-lang="ja">JP</span> |
   <span data-lang="de">DE</span>
 </div>
 
@@ -159,7 +156,6 @@ body {
 const langs = document.querySelectorAll('.lang');
 const text = document.getElementById('text');
 const buttons = document.querySelectorAll('.ui span');
-
 const bgGradients = {
   en: ['#e0f0ff','#cce6ff','#BCEFFD'],
   ja: ['#fff7e6','#fff0cc','#ffe6b3'],
@@ -180,7 +176,6 @@ function setLang(lang){
   text.style.opacity=1;
   text.style.filter='blur(0px)';
 }
-
 buttons.forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
 
 function animateGradient(){
@@ -189,7 +184,6 @@ function animateGradient(){
   document.body.style.backgroundSize='400% 400%';
   setTimeout(animateGradient,6000);
 }
-
 setLang(currentLang);
 animateGradient();
 
@@ -214,8 +208,8 @@ function randomPosition(el){
   const w=rect.width || 300;
   const h=rect.height || 300;
 
-  const safeX = vw*0.2; // 左20%避ける
-  const safeY = vh*0.15; // 上15%避ける
+  const safeX = vw*0.2;
+  const safeY = vh*0.15;
 
   const maxX = vw-w;
   const maxY = vh-h;
