@@ -9,7 +9,7 @@ body {
   color: #111;
 }
 
-.index {
+#index {
   display: flex;
   gap: 4rem;
   padding: 4rem;
@@ -49,26 +49,24 @@ body {
 }
 
 /* Hover preview (single image) */
-}
 #hoverPreview {
   position: fixed;
   width: 120px;
   height: 100px;
 
-  background-color: #ccc;   /* ← これを一時的に追加 */
+  background-color: #ccc; /* ← デバッグ用 */
   background-size: cover;
   background-position: center;
 
-  opacity: 0.8;
+  opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
   z-index: 10;
 }
 
-
 /* Mobile */
 @media (max-width: 768px) {
-  .index {
+  #index {
     flex-direction: column;
     gap: 2.5rem;
     padding: 2rem;
@@ -77,15 +75,4 @@ body {
   #hoverPreview {
     display: none;
   }
-#hoverPreview {
-  position: fixed;
-  width: 300px;
-  height: 180px;
-  background: red;          /* ← 一時的 */
-  opacity: 1 !important;    /* ← 一時的 */
-  top: 100px;
-  left: 100px;
-  z-index: 9999;
 }
-
-
