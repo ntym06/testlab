@@ -83,13 +83,16 @@
 /* ====================
    Side fixed image
 ==================== */
+/* ===== Side image (scroll driven) ===== */
 .side-image {
-  position: fixed;
+  position: absolute;        /* ← fixed をやめる */
   left: 3vw;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
+  top: 0;
+  opacity: 0;
+  transform: translateY(0);
+  transition: opacity 0.8s ease;
   pointer-events: none;
+  z-index: 1;
 }
 
 .side-image img {
@@ -97,6 +100,7 @@
   max-width: 30vw;
   opacity: 0.45;
 }
+
 
 /* Mobile: 非表示（任意） */
 @media (max-width: 768px) {
