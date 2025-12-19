@@ -149,8 +149,10 @@ body {
   <img src="svg/email-animation.gif" alt="">
 </a>
 
-<div class="side-image">
+  <div class="side-image" id="sideImage">
   <img src="svg/side-image.png" alt="">
+</div>
+
 </div>
 
 <div id="bottom-sticky">
@@ -259,40 +261,41 @@ addEventListener('scroll', updateBottom);
 addEventListener('resize', ()=>{ measure(); updateBottom(); });
 </script>
 <script>
-/* ===== Side image scroll logic ===== */
+
+<script>
+/* ===== Side image scroll-follow (FIXED) ===== */
 const side = document.getElementById('sideImage');
 
-function updateSideImage(){
-  const y = window.scrollY;
+function updateSide(){
+  if (!side) return;
+
+  const y  = window.scrollY;
   const vh = window.innerHeight;
   const dh = document.documentElement.scrollHeight;
 
-  // 出現ポイント（ページ中盤）
-  const appear = dh * 0.45;
-  const disappear = dh * 0.85;
+  // 出現ゾーン（ページ中盤）
+  const appearStart = dh * 0.35;
+  const appearEnd   = dh * 0.75;
 
-  if (y < appear) {
-    side.style.opacity = 0;
-    return;
-  }
-
-  if (y > disappear) {
+  if (y < appearStart || y > appearEnd) {
     side.style.opacity = 0;
     return;
   }
 
   // 表示
-  side.style.opacity = 0.45;
+  side.style.opacity = 1;
 
-  // スクロール追従（ゆっくり）
-  const offset = (y - appear) * 0.3;
-  side.style.transform = `translateY(${offset}px)`;
+  // 中盤基準の追従（ゆっくり）
+  const baseY = appearStart + vh * 0.3;
+  const offset = (y - appearStart) * 0.25;
+
+  side.style.transform = `translateY(${baseY + offset}px)`;
 }
 
-window.addEventListener('scroll', updateSideImage);
-window.addEventListener('resize', updateSideImage);
+window.addEventListener('scroll', updateSide);
+window.addEventListener('resize', updateSide);
+updateSide();
 </script>
-
 
 
 </body>
