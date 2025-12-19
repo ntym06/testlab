@@ -6,9 +6,7 @@
 <title>nat/yama — under construction</title>
 
 <style>
-/* --------------------
-   Reset
--------------------- */
+/* ===== Reset ===== */
 *,
 *::before,
 *::after { box-sizing: border-box; }
@@ -20,16 +18,13 @@ html, body {
   color: #111;
 }
 
-/* --------------------
-   Background
--------------------- */
+/* ===== Background ===== */
 body {
   background: linear-gradient(135deg, #e0f0ff, #e6edf3, #d6f3fb);
+  transition: background 1s ease;
 }
 
-/* --------------------
-   Text
--------------------- */
+/* ===== Text ===== */
 .text {
   position: fixed;
   inset: 0;
@@ -39,9 +34,9 @@ body {
   font-size: 1.5rem;
   line-height: 1.55;
   z-index: 2;
-  transition: opacity .6s, filter .6s;
+  transition: opacity .6s ease, filter .6s ease;
 }
-.lang { opacity: 0; transition: opacity .8s; }
+.lang { opacity: 0; transition: opacity .8s ease; }
 .lang.active { opacity: 1; }
 
 .studio {
@@ -51,9 +46,7 @@ body {
   opacity: .45;
 }
 
-/* --------------------
-   UI
--------------------- */
+/* ===== UI ===== */
 .ui {
   position: fixed;
   right: 2rem;
@@ -65,9 +58,7 @@ body {
 .ui span { cursor: pointer; opacity: .4; }
 .ui span:hover { opacity: 1; }
 
-/* --------------------
-   Floating GIF
--------------------- */
+/* ===== Floating GIF ===== */
 .mail-gif {
   position: absolute;
   opacity: 0;
@@ -82,18 +73,17 @@ body {
 .mail-gif img {
   width: 420px;
   max-width: 70vw;
+  height: auto;
 }
 
-/* --------------------
-   Side fixed image
--------------------- */
+/* ===== Side image ===== */
 .side-image {
   position: fixed;
   left: 3vw;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 1;
   pointer-events: none;
+  z-index: 1;
 }
 .side-image img {
   width: 220px;
@@ -101,9 +91,7 @@ body {
   opacity: .45;
 }
 
-/* --------------------
-   Bottom image
--------------------- */
+/* ===== Bottom image ===== */
 #bottom-sticky {
   position: fixed;
   left: 0;
@@ -116,16 +104,22 @@ body {
 }
 #bottom-sticky img {
   width: 100%;
+  height: auto;
+  display: block;
   opacity: .55;
 }
 
-/* --------------------
-   Mobile
--------------------- */
+/* ===== Mobile ===== */
 @media (max-width: 768px) {
-  .text { padding: 2rem 1.5rem; font-size: 1.6rem; }
+  .text {
+    padding: 2rem 1.5rem;
+    font-size: 1.6rem;
+  }
   .ui { font-size: 15px; }
-  .mail-gif img { width: 50vw; max-width: 150px; }
+  .mail-gif img {
+    width: 50vw;
+    max-width: 150px;
+  }
   .side-image { display: none; }
   #bottom-sticky img {
     height: 38vh;
@@ -164,78 +158,105 @@ body {
 </div>
 
 <script>
-/* --------------------
-   Language
--------------------- */
-const langs = document.querySelectorAll('.lang');
+/* ===== Language + color ===== */
+const langColors = {
+  en: ['#e0f0ff', '#e6edf3', '#d6f3fb'],
+  ja: ['#fff7e6', '#fff0cc', '#ffe6b3'],
+  de: ['#f0fff0', '#dfffe0', '#cce6cc']
+};
+
+const text = document.getElementById('text');
+
 document.querySelectorAll('.ui span').forEach(b=>{
-  b.onclick=()=>{
-    langs.forEach(l=>l.classList.remove('active'));
-    document.querySelector('.'+b.dataset.lang).classList.add('active');
+  b.onclick = () => {
+    const lang = b.dataset.lang;
+
+    document.querySelectorAll('.lang')
+      .forEach(l => l.classList.remove('active'));
+    document.querySelector('.'+lang).classList.add('active');
+
+    const c = langColors[lang];
+    document.body.style.background =
+      `linear-gradient(135deg, ${c[0]}, ${c[1]}, ${c[2]})`;
+
+    text.style.opacity = 1;
+    text.style.filter = 'blur(0px)';
   };
 });
 
-/* --------------------
-   Text scroll fade
--------------------- */
-const text = document.getElementById('text');
-addEventListener('scroll',()=>{
-  const t=Math.min(scrollY/400,1);
-  text.style.opacity=1-t;
-  text.style.filter=`blur(${t*6}px)`;
+/* 初期言語色 */
+document.querySelector('.ui span[data-lang="en"]').click();
+
+/* ===== Text scroll fade ===== */
+addEventListener('scroll', ()=>{
+  const t = Math.min(scrollY/400,1);
+  text.style.opacity = 1 - t;
+  text.style.filter = `blur(${t*6}px)`;
 });
 
-/* --------------------
-   Floating GIF loop
--------------------- */
+/* ===== Floating GIF loop ===== */
 const mailGif = document.getElementById('mailGif');
-let shown=false;
+let shown = false;
 
-function randomPos(el){
-  const vw=innerWidth, vh=innerHeight;
-  el.style.left=(vw*.25+Math.random()*vw*.6)+'px';
-  el.style.top =(vh*.15+Math.random()*vh*.6)+'px';
+function randomPosition(el){
+  const vw = innerWidth;
+  const vh = innerHeight;
+  el.style.left = (vw*0.25 + Math.random()*vw*0.6) + 'px';
+  el.style.top  = (vh*0.15 + Math.random()*vh*0.6) + 'px';
 }
 
 function floatLoop(){
   setInterval(()=>{
     mailGif.classList.remove('is-visible');
     setTimeout(()=>{
-      randomPos(mailGif);
+      randomPosition(mailGif);
       mailGif.classList.add('is-visible');
     },800);
   },11000);
 }
 
-addEventListener('scroll',()=>{
-  if(!shown && scrollY>30){
-    shown=true;
-    randomPos(mailGif);
+addEventListener('scroll', ()=>{
+  if(!shown && scrollY > 30){
+    shown = true;
+    randomPosition(mailGif);
     setTimeout(()=>mailGif.classList.add('is-visible'),500);
     floatLoop();
   }
 });
 
-/* --------------------
-   Bottom scroll
--------------------- */
-const bottom = document.getElementById('bottom-sticky');
-const img = bottom.querySelector('img');
-let h=0, ready=false;
+addEventListener('resize', ()=>{
+  if(shown) randomPosition(mailGif);
+});
 
-function measure(){ h=bottom.offsetHeight; ready=h>0; }
-function update(){
-  if(!ready) return;
-  const y=scrollY, vh=innerHeight, dh=document.documentElement.scrollHeight;
-  const start = innerWidth<768 ? dh-vh*1.1 : dh-vh*1.25;
-  const end   = dh-vh;
-  if(y<start){ bottom.style.transform=`translateY(${h}px)`; return; }
-  const t=Math.min(Math.max((y-start)/(end-start),0),1);
-  bottom.style.transform=`translateY(${(1-t)*h}px)`;
+/* ===== Bottom image scroll ===== */
+const bottom = document.getElementById('bottom-sticky');
+const bottomImg = bottom.querySelector('img');
+let h = 0, ready = false;
+
+function measure(){
+  h = bottom.offsetHeight;
+  ready = h > 0;
 }
-img.onload=()=>{measure();update();};
-addEventListener('scroll',update);
-addEventListener('resize',()=>{measure();update();});
+function updateBottom(){
+  if(!ready) return;
+
+  const y = scrollY;
+  const vh = innerHeight;
+  const dh = document.documentElement.scrollHeight;
+  const start = innerWidth < 768 ? dh - vh*1.1 : dh - vh*1.25;
+  const end   = dh - vh;
+
+  if(y < start){
+    bottom.style.transform = `translateY(${h}px)`;
+    return;
+  }
+  const t = Math.min(Math.max((y-start)/(end-start),0),1);
+  bottom.style.transform = `translateY(${(1-t)*h}px)`;
+}
+
+bottomImg.onload = ()=>{ measure(); updateBottom(); };
+addEventListener('scroll', updateBottom);
+addEventListener('resize', ()=>{ measure(); updateBottom(); });
 </script>
 
 </body>
