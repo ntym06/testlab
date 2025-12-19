@@ -258,6 +258,42 @@ bottomImg.onload = ()=>{ measure(); updateBottom(); };
 addEventListener('scroll', updateBottom);
 addEventListener('resize', ()=>{ measure(); updateBottom(); });
 </script>
+<script>
+/* ===== Side image scroll logic ===== */
+const side = document.getElementById('sideImage');
+
+function updateSideImage(){
+  const y = window.scrollY;
+  const vh = window.innerHeight;
+  const dh = document.documentElement.scrollHeight;
+
+  // 出現ポイント（ページ中盤）
+  const appear = dh * 0.45;
+  const disappear = dh * 0.85;
+
+  if (y < appear) {
+    side.style.opacity = 0;
+    return;
+  }
+
+  if (y > disappear) {
+    side.style.opacity = 0;
+    return;
+  }
+
+  // 表示
+  side.style.opacity = 0.45;
+
+  // スクロール追従（ゆっくり）
+  const offset = (y - appear) * 0.3;
+  side.style.transform = `translateY(${offset}px)`;
+}
+
+window.addEventListener('scroll', updateSideImage);
+window.addEventListener('resize', updateSideImage);
+</script>
+
+
 
 </body>
 </html>
