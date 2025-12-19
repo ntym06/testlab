@@ -96,6 +96,9 @@ body {
   height: auto;
   display: block;
 }
+<div class="side-image">
+  <img src="svg/side-image.png" alt="">
+</div>
 
 /* --------------------
    Bottom image (ADD ONLY)
@@ -237,29 +240,58 @@ window.addEventListener('scroll', ()=>{
   text.style.filter = `blur(${t*6}px)`;
 });
 
-/* --------------------
-   Floating GIF
--------------------- */
+<script>
+/* ====================
+   Floating GIF (RECOVER)
+==================== */
 const mailGif = document.getElementById('mailGif');
 let mailShown = false;
 
-function randomPosition(el){
+function randomPositionAvoidText(el){
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-  el.style.left = (vw*0.2 + Math.random()*vw*0.6) + 'px';
-  el.style.top  = (vh*0.15 + Math.random()*vh*0.6) + 'px';
+  const rect = el.getBoundingClientRect();
+  const w = rect.width || 300;
+  const h = rect.height || 300;
+
+  // テキストを避ける安全マージン
+  const safeLeft = vw * 0.25;
+  const safeTop  = vh * 0.15;
+
+  const maxX = vw - w;
+  const maxY = vh - h;
+
+  const x = safeLeft + Math.random() * Math.max(0, maxX - safeLeft);
+  const y = safeTop  + Math.random() * Math.max(0, maxY - safeTop);
+
+  el.style.left = `${x}px`;
+  el.style.top  = `${y}px`;
 }
 
-window.addEventListener('scroll', ()=>{
-  if(!mailShown && window.scrollY>30){
+function floatLoop(el, interval = 11000){
+  setInterval(() => {
+    el.classList.remove('is-visible');
+    setTimeout(() => {
+      randomPositionAvoidText(el);
+      el.classList.add('is-visible');
+    }, 800);
+  }, interval);
+}
+
+window.addEventListener('scroll', () => {
+  if(!mailShown && window.scrollY > 30){
     mailShown = true;
-    randomPosition(mailGif);
-    setTimeout(()=>mailGif.classList.add('is-visible'),500);
+    randomPositionAvoidText(mailGif);
+    setTimeout(() => mailGif.classList.add('is-visible'), 500);
+    floatLoop(mailGif, 11000);
   }
 });
-window.addEventListener('resize', ()=>{
-  if(mailShown) randomPosition(mailGif);
+
+window.addEventListener('resize', () => {
+  if(mailShown) randomPositionAvoidText(mailGif);
 });
+</script>
+
 
 /* --------------------
    Bottom image scroll
