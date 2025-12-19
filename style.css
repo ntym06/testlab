@@ -52,3 +52,32 @@
     object-position: center bottom;
   }
 }
+/* ===== Bottom image (ADD ONLY) ===== */
+#bottom-sticky {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 0;
+
+  /* 初期は絶対に見せない */
+  transform: translateY(100%);
+  will-change: transform;
+}
+
+#bottom-sticky img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0.55;
+}
+
+@media (max-width: 768px) {
+  #bottom-sticky img {
+    height: 38vh;
+    object-fit: cover;
+    object-position: center bottom;
+  }
+}
+
