@@ -289,36 +289,47 @@ function setLang(lang){
 // 初期化
 animate();
 </script>
+   
 <script>
 /* --------------------
-   Bottom image scroll logic
+   Bottom image scroll logic (fixed & safe)
 -------------------- */
 const bottomSticky = document.getElementById('bottom-sticky');
 
 let imgHeight = 0;
+let ready = false;   // ★ 重要：初期ロック
 
 function updateImageHeight() {
   imgHeight = bottomSticky.offsetHeight;
+  if (imgHeight > 0) {
+    ready = true;
+  }
 }
 
 function updateBottomImage() {
+  if (!ready) return; // ★ ロード直後は何もしない
+
   const scrollTop = window.scrollY;
   const winH = window.innerHeight;
   const docH = document.documentElement.scrollHeight;
 
-  // 出現開始位置（かなり下）
   const appearStart = docH - winH * 1.25;
-  // 完全到達
-  const appearEnd = docH - winH;
+  const appearEnd   = docH - winH;
+
+  // ★ まだ到達していなければ完全に隠す
+  if (scrollTop < appearStart) {
+    bottomSticky.style.transform = `translateY(${imgHeight}px)`;
+    return;
+  }
 
   let t = (scrollTop - appearStart) / (appearEnd - appearStart);
   t = Math.max(0, Math.min(1, t));
 
-  // 下から押し上げる
   const translateY = (1 - t) * imgHeight;
   bottomSticky.style.transform = `translateY(${translateY}px)`;
 }
 
+// ★ 画像ロード後に初期化
 window.addEventListener('load', () => {
   updateImageHeight();
   updateBottomImage();
@@ -331,6 +342,7 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('scroll', updateBottomImage);
 </script>
+
 
 
 
