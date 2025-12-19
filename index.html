@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>nat/yama — under construction</title>
 
 <style>
 /* --------------------
-   Reset / Base
+   Reset
 -------------------- */
 *,
 *::before,
@@ -15,18 +15,17 @@
 
 html, body {
   margin: 0;
-  min-height: 200vh;          /* スクロール用 */
+  min-height: 200vh; /* scroll space */
   font-family: Georgia, "Times New Roman", serif;
   color: #111;
-  /* ✅ body:flex を絶対に使わない */
 }
 
 /* --------------------
-   Background (base)
+   Background animation
 -------------------- */
 body {
-  /* JSで動的に上書きされる（初期値） */
   background: linear-gradient(135deg, #e0f0ff, #e6edf3, #d6f3fb);
+  background-size: 400% 400%;
 }
 
 /* --------------------
@@ -73,7 +72,6 @@ body {
 .ui span {
   cursor: pointer;
   opacity: 0.4;
-  user-select: none;
 }
 .ui span:hover { opacity: 1; }
 
@@ -100,7 +98,7 @@ body {
 }
 
 /* --------------------
-   Bottom image (scroll driven)
+   Bottom image (ADD ONLY)
 -------------------- */
 #bottom-sticky {
   position: fixed;
@@ -110,11 +108,10 @@ body {
   pointer-events: none;
   z-index: 0;
 
-  /* ✅ 初期は必ず非表示 */
+  /* 初期は完全に画面外 */
   transform: translateY(100%);
   will-change: transform;
 }
-
 #bottom-sticky img {
   width: 100%;
   height: auto;
@@ -143,8 +140,6 @@ body {
     width: 50vw;
     max-width: 150px;
   }
-
-  /* mobile bottom crop */
   #bottom-sticky img {
     height: 38vh;
     object-fit: cover;
@@ -158,15 +153,15 @@ body {
 
 <div class="text" id="text">
   <span class="studio">nat/yama — under construction</span>
-
   <p class="lang en active">Berlin-based designer for cultural projects</p>
-
   <p class="lang ja">
-    nat/yamaは<br>コンセプト設計から表現まで手がける<br>アートディレクターです
+    nat/yamaは<br>
+    コンセプト設計から表現まで手がける<br>
+    アートディレクターです
   </p>
-
   <p class="lang de">
-    Kultur- und Mediengestalterin<br>für Bildungs- und Kontextprojekte
+    Kultur- und Mediengestalterin<br>
+    für Bildungs- und Kontextprojekte
   </p>
 </div>
 
@@ -180,15 +175,15 @@ body {
   <img src="svg/email-animation.gif" alt="contact mail">
 </a>
 
-<!-- ✅ Bottom image (must be BEFORE JS) -->
+<!-- Bottom image -->
 <div id="bottom-sticky">
   <img src="svg/bottom-image.png" alt="">
 </div>
 
 <script>
-/* =========================================================
-   1) Language + background gradient (ONE system, no duplicates)
-========================================================= */
+/* --------------------
+   Language + background
+-------------------- */
 const langs = document.querySelectorAll('.lang');
 const text = document.getElementById('text');
 const buttons = document.querySelectorAll('.ui span');
@@ -207,157 +202,94 @@ function setLang(lang){
   langs.forEach(l => l.classList.remove('active'));
   document.querySelector('.lang.' + lang).classList.add('active');
   currentLang = lang;
-
-  // 言語切替時：テキストを戻す
   text.style.opacity = 1;
   text.style.filter = 'blur(0px)';
-
-  // 背景アニメをリセット（気持ちよく切り替わる）
-  gradIndex = 0;
-  gradProgress = 0;
 }
 buttons.forEach(b => b.onclick = () => setLang(b.dataset.lang));
 setLang(currentLang);
 
-/* ---- smooth gradient animation ---- */
-let gradIndex = 0;
-let gradProgress = 0;
-
-function hexToRgb(h){ return h.match(/\w\w/g).map(x => parseInt(x,16)); }
-function rgbToHex(r,g,b){
-  return '#'+[r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
-}
+/* smooth background */
+let gi = 0, gp = 0;
 function lerp(a,b,t){ return a + (b-a)*t; }
-
-function animateBackground(){
-  const colors = bgGradients[currentLang];
-
-  const c1 = hexToRgb(colors[gradIndex]);
-  const c2 = hexToRgb(colors[(gradIndex+1) % colors.length]);
-
-  const rgb = c1.map((v,i) => Math.round(lerp(v, c2[i], gradProgress)));
-  const colA = rgbToHex(rgb[0],rgb[1],rgb[2]);
-
-  // 2色目は少しだけ別補間にして “平面” を避ける
-  const c3 = hexToRgb(colors[(gradIndex+2) % colors.length]);
-  const rgb2 = c2.map((v,i) => Math.round(lerp(v, c3[i], gradProgress * 0.8)));
-  const colB = rgbToHex(rgb2[0],rgb2[1],rgb2[2]);
-
-  document.body.style.background = `linear-gradient(135deg, ${colA}, ${colB})`;
-
-  gradProgress += 0.002; // 速度
-  if(gradProgress >= 1){
-    gradProgress = 0;
-    gradIndex = (gradIndex + 1) % colors.length;
-  }
-  requestAnimationFrame(animateBackground);
+function hexToRgb(h){ return h.match(/\w\w/g).map(x=>parseInt(x,16)); }
+function rgbToHex(r,g,b){
+  return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
 }
-animateBackground();
+function animateBG(){
+  const c = bgGradients[currentLang];
+  const a = hexToRgb(c[gi]);
+  const b = hexToRgb(c[(gi+1)%c.length]);
+  const rgb = a.map((v,i)=>Math.round(lerp(v,b[i],gp)));
+  document.body.style.background =
+    `linear-gradient(135deg, ${rgbToHex(...rgb)}, ${c[(gi+2)%c.length]})`;
+  gp += 0.002;
+  if(gp>=1){ gp=0; gi=(gi+1)%c.length; }
+  requestAnimationFrame(animateBG);
+}
+animateBG();
 
-/* =========================================================
-   2) Text scroll fade/blur (keep)
-========================================================= */
-window.addEventListener('scroll', () => {
-  const t = Math.min(window.scrollY / 400, 1);
+/* --------------------
+   Text scroll fade
+-------------------- */
+window.addEventListener('scroll', ()=>{
+  const t = Math.min(window.scrollY/400,1);
   text.style.opacity = 1 - t;
-  text.style.filter = `blur(${t * 6}px)`;
+  text.style.filter = `blur(${t*6}px)`;
 });
 
-/* =========================================================
-   3) Floating GIF (keep)
-========================================================= */
+/* --------------------
+   Floating GIF
+-------------------- */
 const mailGif = document.getElementById('mailGif');
+let mailShown = false;
 
 function randomPosition(el){
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-  const rect = el.getBoundingClientRect();
-  const w = rect.width || 300;
-  const h = rect.height || 300;
-
-  const safeX = vw * 0.2;
-  const safeY = vh * 0.15;
-
-  const maxX = vw - w;
-  const maxY = vh - h;
-
-  const x = safeX + Math.random() * Math.max(0, (maxX - safeX));
-  const y = safeY + Math.random() * Math.max(0, (maxY - safeY));
-
-  el.style.left = `${x}px`;
-  el.style.top  = `${y}px`;
+  el.style.left = (vw*0.2 + Math.random()*vw*0.6) + 'px';
+  el.style.top  = (vh*0.15 + Math.random()*vh*0.6) + 'px';
 }
 
-function floatGif(el, interval=11000){
-  setInterval(() => {
-    el.classList.remove('is-visible');
-    setTimeout(() => {
-      randomPosition(el);
-      el.classList.add('is-visible');
-    }, 800);
-  }, interval);
-}
-
-let mailShown = false;
-window.addEventListener('scroll', () => {
-  if(!mailShown && window.scrollY > 30){
+window.addEventListener('scroll', ()=>{
+  if(!mailShown && window.scrollY>30){
     mailShown = true;
     randomPosition(mailGif);
-    setTimeout(() => mailGif.classList.add('is-visible'), 500);
-    floatGif(mailGif, 11000);
+    setTimeout(()=>mailGif.classList.add('is-visible'),500);
   }
 });
-
-window.addEventListener('resize', () => {
+window.addEventListener('resize', ()=>{
   if(mailShown) randomPosition(mailGif);
 });
 
-/* =========================================================
-   4) Bottom image scroll (ADD, stable)
-========================================================= */
+/* --------------------
+   Bottom image scroll
+-------------------- */
 const bottomSticky = document.getElementById('bottom-sticky');
 const bottomImg = bottomSticky.querySelector('img');
 
-let bottomH = 0;
-let bottomReady = false;
+let bh = 0, ready = false;
 
 function measureBottom(){
-  bottomH = bottomSticky.offsetHeight;
-  bottomReady = bottomH > 0;
+  bh = bottomSticky.offsetHeight;
+  ready = bh > 0;
 }
-
 function updateBottom(){
-  if(!bottomReady) return;
-
+  if(!ready) return;
   const y = window.scrollY;
   const vh = window.innerHeight;
   const dh = document.documentElement.scrollHeight;
-
-  // 出現開始（かなり下）
-  const start = dh - vh * 1.25;
-  // 最下部
-  const end = dh - vh;
-
+  const start = dh - vh*1.25;
+  const end   = dh - vh;
   if(y < start){
-    bottomSticky.style.transform = `translateY(${bottomH}px)`;
+    bottomSticky.style.transform = `translateY(${bh}px)`;
     return;
   }
-
-  const t = Math.min(Math.max((y - start) / (end - start), 0), 1);
-  bottomSticky.style.transform = `translateY(${(1 - t) * bottomH}px)`;
+  const t = Math.min(Math.max((y-start)/(end-start),0),1);
+  bottomSticky.style.transform = `translateY(${(1-t)*bh}px)`;
 }
-
-// 画像ロード後に初期化（チラ見え防止）
-bottomImg.onload = () => {
-  measureBottom();
-  updateBottom();
-};
-
+bottomImg.onload = ()=>{ measureBottom(); updateBottom(); };
 window.addEventListener('scroll', updateBottom);
-window.addEventListener('resize', () => {
-  measureBottom();
-  updateBottom();
-});
+window.addEventListener('resize', ()=>{ measureBottom(); updateBottom(); });
 </script>
 
 </body>
