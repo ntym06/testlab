@@ -1,232 +1,7 @@
-/* --------------------
-   Reset (stricter)
--------------------- */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  height: 100%;
-}
-
-body {
-  min-height: 100%;
-  margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
-  color: #111;
-
-  /* background animation */
-  background: linear-gradient(
-    120deg,
-    #f6f4ef,
-    #e9edf1,
-    #f3ede8
-  );
-  background-size: 300% 300%;
-  animation: bgFlow 60s linear infinite;
-
-  /* Chrome安定化 */
-  display: flex;
-}
-
-/* --------------------
-   Background animation
--------------------- */
-
-@keyframes bgFlow {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* --------------------
-   Layout (critical fix)
--------------------- */
-
-.container {
-  width: 100%;
-  min-height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  padding: 4rem;
-
-  /* Chrome text rendering fix */
-  transform: translateZ(0);
-}
-
-.text {
-  max-width: 640px;
-}
-
-/* --------------------
-   Typography
--------------------- */
-
-h1 {
-  font-size: 1.1rem;
-  font-weight: normal;
-  margin-bottom: 1.6rem;
-}
-
-.lang {
-  display: none;
-  font-size: 1rem;
-  line-height: 1.8;
-}
-
-.lang.active {
-  display: block;
-}
-.ui {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 5;
-
-  font-size: 18px;      /* ← ここが本体 */
-  letter-spacing: 0.18em;
-  color: rgba(60,60,60,0.65);
-}
-
-
-/* --------------------
-   Email GIF
--------------------- */
-/* --------------------
-   Floating Email GIF
--------------------- */
-
-.floating-gifs {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  pointer-events: none;
-}
-
-.mail-gif {
-  position: absolute;
-  pointer-events: auto;
-
-  opacity: 0;
-  transform: translateY(30px) scale(0.96);
-
-  transition:
-    opacity 5.5s ease,
-    transform 5.5s ease,
-    left 10s ease,
-    top 10s ease;
-}
-
-.mail-gif.is-visible {
-  opacity: 0.6;
-  transform: translateY(0) scale(1);
-}
-
-/* サイズ制御（モバイルで縮みすぎない） */
-.mail-gif img {
-  width: 420px;
-  max-width: 70vw;
-  height: auto;
-  display: block;
-}
-
-
-
-/* --------------------
-   Mobile
--------------------- */
-@media (max-width: 768px) {
-  .ui {
-    font-size: 15px;
-    bottom: 1.8rem;
-    right: 1.5rem;
-  }
-}
-@media (max-width: 768px) {
-  .mail-gif img {
-    width: 50vw;      /* ← 画面幅の半分 */
-    max-width: 50vw; /* ← 念のため同じに */
-  }
-}
-
 /* ====================
-   Bottom image — scroll driven
+   Bottom image (CORRECT)
 ==================== */
 
-/* ====================
-   Bottom image base
-==================== */
-
-#bottom-sticky {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100vw;
-  overflow: hidden;
-
-  transform: translateY(0);
-  will-change: transform;
-
-  pointer-events: none;
-  z-index: 3;
-}
-
-/* 画像共通 */
-#bottom-sticky img {
-  display: block;
-}
-
-/* ---------- PC ---------- */
-@media (min-width: 769px) {
-  #bottom-sticky {
-    height: auto;
-  }
-
-  #bottom-sticky img {
-    width: 100vw;
-    height: auto;
-    object-fit: contain;
-    opacity: 0.55;
-  }
-}
-
-/* ---------- Mobile ---------- */
-@media (max-width: 768px) {
-  #bottom-sticky {
-    height: 38vh; /* ← モバイルで見せたい高さ */
-  }
-
-  #bottom-sticky img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;     /* ← 中央トリミング */
-    object-position: center bottom;
-    opacity: 0.55;
-  }
-}
-
-
-/* mobile */
-@media (max-width: 768px) {
-  #bottom-sticky img {
-    width: 70vw;
-  }
-}
-/* --------------------
-   Bottom sticky image
--------------------- */
-
-#bottom-sticky img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
 #bottom-sticky {
   position: fixed;
   left: 0;
@@ -235,8 +10,23 @@ h1 {
   pointer-events: none;
   z-index: 0;
 
-  /* ★ 初期は必ず完全に隠す */
+  /* 初期は絶対に見せない */
   transform: translateY(100%);
+  will-change: transform;
 }
 
+#bottom-sticky img {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0.55;
+}
 
+/* Mobile only */
+@media (max-width: 768px) {
+  #bottom-sticky img {
+    height: 38vh;
+    object-fit: cover;
+    object-position: center bottom;
+  }
+}
