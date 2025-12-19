@@ -80,4 +80,29 @@
     object-position: center bottom;
   }
 }
+/* ====================
+   Side fixed image
+==================== */
+.side-image {
+  position: fixed;
+  left: 3vw;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.side-image img {
+  width: 220px;
+  max-width: 30vw;
+  opacity: 0.45;
+}
+
+/* Mobile: 非表示（任意） */
+@media (max-width: 768px) {
+  .side-image {
+    display: none;
+  }
+}
+
 
