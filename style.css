@@ -218,5 +218,26 @@ h1 {
     width: 70vw;
   }
 }
+/* --------------------
+   Bottom sticky image
+-------------------- */
+#bottom-sticky {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 0;
+
+  /* 初期は完全に画面外 */
+  transform: translateY(100%);
+  transition: transform 0.1s linear;
+}
+
+#bottom-sticky img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
 
