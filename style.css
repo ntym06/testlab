@@ -221,6 +221,12 @@ h1 {
 /* --------------------
    Bottom sticky image
 -------------------- */
+
+#bottom-sticky img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 #bottom-sticky {
   position: fixed;
   left: 0;
@@ -229,15 +235,8 @@ h1 {
   pointer-events: none;
   z-index: 0;
 
-  /* 初期は完全に画面外 */
+  /* ★ 初期は必ず完全に隠す */
   transform: translateY(100%);
-  transition: transform 0.1s linear;
-}
-
-#bottom-sticky img {
-  width: 100%;
-  height: auto;
-  display: block;
 }
 
 
