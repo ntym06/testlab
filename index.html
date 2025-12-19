@@ -1,32 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>nat/yama — under construction</title>
 
 <style>
-/* ====================
-   Base
-==================== */
+/* --------------------
+   Reset / Base
+-------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
 html, body {
   margin: 0;
-  min-height: 200vh;
+  min-height: 200vh;          /* スクロール用 */
   font-family: Georgia, "Times New Roman", serif;
   color: #111;
+  /* ✅ body:flex を絶対に使わない */
 }
 
-/* ====================
-   Background
-==================== */
+/* --------------------
+   Background (base)
+-------------------- */
 body {
-  background: linear-gradient(
-    120deg,
-    #f6f4ef,
-    #e9edf1,
-    #f3ede8
-  );
-  background-size: 300% 300%;
-  animation: bgFlow 60s linear infinite;
+  /* JSで動的に上書きされる（初期値） */
+  background: linear-gradient(135deg, #e0f0ff, #e6edf3, #d6f3fb);
 }
-@keyframes bg
+
+/* --------------------
+   Text
+-------------------- */
+.text {
+  position: fixed;
+  inset: 0;
+  padding: 4rem;
+  pointer-events: none;
+  transition: opacity 0.6s ease, filter 0.6s ease;
+  color: rgba(60, 60, 60, 0.55);
+  font-size: 1.5rem;
+  line-height: 1.55;
+  z-index: 2;
+}
+
+.lang {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.lang.active { opacity: 1; }
+
+.studio {
+  display: block;
+  margin-bottom: 3.5rem;
+  font-size: 1.1rem;
+  opacity: 0.45;
+  letter-spacing: 0.02em;
+}
+
+/* --------------------
+   Language UI
+-------------------- */
+.ui {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  color: rgba(60,60,60,0.65);
+  z-index: 5;
+}
+.ui span {
+  cursor: pointer;
+  opacity: 0.4;
+  user-select: none;
+}
+.ui span:hover { opacity: 1; }
+
+/* --------------------
+   Floating GIF
+-------------------- */
+.mail-gif {
+  position: absolute;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: opacity 2.5s ease, transform 2.5s ease;
+  z-index: 4;
+}
+.mail-gif.is-visible {
+  opacity: 0.6;
+  transform: translateY(0) scale(1);
+}
+.mail-gif img {
+  width: 420px;
+  max-width: 70vw;
+  height: auto;
+  display: block;
+}
+
+/* --------------------
+   Bottom image (scroll driven)
+-------------------- */
+#bottom-sticky {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 0;
+
+  /* ✅ 初期は必ず非表示 */
+  transform: translateY(100%);
+  will-change: transform;
+}
+
+#bottom-sticky img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0.55;
+}
+
+/* --------------------
+   Mobile
+-------------------- */
+@media (max-width: 768px) {
+  .text {
+    padding: 2rem 1.5rem;
+    font-size: 1.6rem;
+  }
+  .studio {
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+  .ui {
+    font-size: 15px;
+    bottom: 1.8rem;
+    right: 1.5rem;
+  }
+  .mail-gif img {
+    width: 50vw;
+    max-width: 150px;
+  }
+
+  /* mobile bottom crop */
+  #bottom-sticky img {
+    height: 38vh;
+    object-fit: cover;
+    object-position: center bottom;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="text" id="text">
+  <span class="studio">nat/yama — under construction</span>
+
+  <p class="lang en active">Berlin-based designer for cultural projects</p>
+
+  <p class="lang ja">
+    nat/yamaは<br>コンセプト設計から表現まで手がける<br>アートディレクターです
+  </p>
+
+  <p class="lang de">
+    Kultur- und Mediengestalterin<br>für Bildungs- und Kontextprojekte
+  </p>
+</div>
+
+<div class="ui">
+  <span data-lang="en">EN</span> |
+  <span data-lang="ja">JP</span> |
+  <span data-lang="de">DE</span>
+</div>
+
+<a href="mailto:n@natyama.com" class="mail-gif" id="mailGif" aria-label="contact">
+  <img src="svg/email-animation.gif" alt="contact mail">
+</a>
+
+<!-- ✅ Bottom image (must be BEFORE JS) -->
+<div id="bottom-sticky">
+  <img src="svg/bottom-image.png" alt="">
+</div>
+
+<script>
+/* =========================================================
+   1) Language + background gradient (ONE system, no duplicates)
+========================================================= */
+const langs = document.querySelectorAll('.lang');
+const text = document.getElementById('text');
+const buttons = document.querySelectorAll('.ui span');
+
+const bgGradients = {
+  en: ['#e0f0ff','#e6edf3','#d6f3fb'],
+  ja: ['#fff7e6','#fff0cc','#ffe6b3'],
+  de: ['#f0fff0','#dfffe0','#cce6cc']
+};
+
+let currentLang =
+  navigator.language.startsWith('ja') ? 'ja' :
+  navigator.language.startsWith('de') ? 'de' : 'en';
+
+function setLang(lang){
+  langs.forEach(l => l.classList.remove('active'));
+  document.querySelector('.lang.' + lang).classList.add('active');
+  currentLang = lang;
+
+  // 言語切替時：テキストを戻す
+  text.style.opacity = 1;
+  text.style.filter = 'blur(0px)';
+
+  // 背景アニメをリセット（気持ちよく切り替わる）
+  gradIndex = 0;
+  gradProgress = 0;
+}
+buttons.forEach(b => b.onclick = () => setLang(b.dataset.lang));
+setLang(currentLang);
+
+/* ---- smooth gradient animation ---- */
+let gradIndex = 0;
+let gradProgress = 0;
+
+function hexToRgb(h){ return h.match(/\w\w/g).map(x => parseInt(x,16)); }
+function rgbToHex(r,g,b){
+  return '#'+[r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
+}
+function lerp(a,b,t){ return a + (b-a)*t; }
+
+function animateBackground(){
+  const colors = bgGradients[currentLang];
+
+  const c1 = hexToRgb(colors[gradIndex]);
+  const c2 = hexToRgb(colors[(gradIndex+1) % colors.length]);
+
+  const rgb = c1.map((v,i) => Math.round(lerp(v, c2[i], gradProgress)));
+  const colA = rgbToHex(rgb[0],rgb[1],rgb[2]);
+
+  // 2色目は少しだけ別補間にして “平面” を避ける
+  const c3 = hexToRgb(colors[(gradIndex+2) % colors.length]);
+  const rgb2 = c2.map((v,i) => Math.round(lerp(v, c3[i], gradProgress * 0.8)));
+  const colB = rgbToHex(rgb2[0],rgb2[1],rgb2[2]);
+
+  document.body.style.background = `linear-gradient(135deg, ${colA}, ${colB})`;
+
+  gradProgress += 0.002; // 速度
+  if(gradProgress >= 1){
+    gradProgress = 0;
+    gradIndex = (gradIndex + 1) % colors.length;
+  }
+  requestAnimationFrame(animateBackground);
+}
+animateBackground();
+
+/* =========================================================
+   2) Text scroll fade/blur (keep)
+========================================================= */
+window.addEventListener('scroll', () => {
+  const t = Math.min(window.scrollY / 400, 1);
+  text.style.opacity = 1 - t;
+  text.style.filter = `blur(${t * 6}px)`;
+});
+
+/* =========================================================
+   3) Floating GIF (keep)
+========================================================= */
+const mailGif = document.getElementById('mailGif');
+
+function randomPosition(el){
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const rect = el.getBoundingClientRect();
+  const w = rect.width || 300;
+  const h = rect.height || 300;
+
+  const safeX = vw * 0.2;
+  const safeY = vh * 0.15;
+
+  const maxX = vw - w;
+  const maxY = vh - h;
+
+  const x = safeX + Math.random() * Math.max(0, (maxX - safeX));
+  const y = safeY + Math.random() * Math.max(0, (maxY - safeY));
+
+  el.style.left = `${x}px`;
+  el.style.top  = `${y}px`;
+}
+
+function floatGif(el, interval=11000){
+  setInterval(() => {
+    el.classList.remove('is-visible');
+    setTimeout(() => {
+      randomPosition(el);
+      el.classList.add('is-visible');
+    }, 800);
+  }, interval);
+}
+
+let mailShown = false;
+window.addEventListener('scroll', () => {
+  if(!mailShown && window.scrollY > 30){
+    mailShown = true;
+    randomPosition(mailGif);
+    setTimeout(() => mailGif.classList.add('is-visible'), 500);
+    floatGif(mailGif, 11000);
+  }
+});
+
+window.addEventListener('resize', () => {
+  if(mailShown) randomPosition(mailGif);
+});
+
+/* =========================================================
+   4) Bottom image scroll (ADD, stable)
+========================================================= */
+const bottomSticky = document.getElementById('bottom-sticky');
+const bottomImg = bottomSticky.querySelector('img');
+
+let bottomH = 0;
+let bottomReady = false;
+
+function measureBottom(){
+  bottomH = bottomSticky.offsetHeight;
+  bottomReady = bottomH > 0;
+}
+
+function updateBottom(){
+  if(!bottomReady) return;
+
+  const y = window.scrollY;
+  const vh = window.innerHeight;
+  const dh = document.documentElement.scrollHeight;
+
+  // 出現開始（かなり下）
+  const start = dh - vh * 1.25;
+  // 最下部
+  const end = dh - vh;
+
+  if(y < start){
+    bottomSticky.style.transform = `translateY(${bottomH}px)`;
+    return;
+  }
+
+  const t = Math.min(Math.max((y - start) / (end - start), 0), 1);
+  bottomSticky.style.transform = `translateY(${(1 - t) * bottomH}px)`;
+}
+
+// 画像ロード後に初期化（チラ見え防止）
+bottomImg.onload = () => {
+  measureBottom();
+  updateBottom();
+};
+
+window.addEventListener('scroll', updateBottom);
+window.addEventListener('resize', () => {
+  measureBottom();
+  updateBottom();
+});
+</script>
+
+</body>
+</html>
