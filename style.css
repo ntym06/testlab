@@ -83,16 +83,16 @@
 /* ====================
    Side fixed image
 ==================== */
-/* ===== Side image (scroll driven) ===== */
+/* ===== Side image (scroll-follow) ===== */
 .side-image {
-  position: absolute;        /* ← fixed をやめる */
+  position: absolute;   /* ← fixed禁止 */
   left: 3vw;
-  top: 0;
+  top: 0;               /* JSで制御する */
   opacity: 0;
-  transform: translateY(0);
-  transition: opacity 0.8s ease;
   pointer-events: none;
   z-index: 1;
+  will-change: transform, opacity;
+  transition: opacity 0.6s ease;
 }
 
 .side-image img {
