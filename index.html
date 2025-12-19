@@ -3,296 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>nat/yama — under construction</title>
+<title>Bottom Sticky Test</title>
+
 <style>
 /* --------------------
-   Reset
+   Base
 -------------------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
 html, body {
   margin: 0;
-  height: 200vh;
+  min-height: 200vh; /* スクロール用 */
   font-family: Georgia, "Times New Roman", serif;
-  color: #111;
-  display: flex;
 }
 
 /* --------------------
-   Background animation
+   Dummy content
 -------------------- */
-body {
-  background: linear-gradient(135deg, #e0f0ff, #e6edf3, #d6f3fb);
-  background-size: 400% 400%;
-  animation: gradientMove 20s ease infinite;
-}
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* --------------------
-   Text
--------------------- */
-.text {
-  position: fixed;
-  inset: 0;
+.content {
   padding: 4rem;
-  pointer-events: none;
-  transition: opacity 0.6s ease, filter 0.6s ease;
-  color: rgba(60, 60, 60, 0.55);
-  font-size: 1.5rem;
-  line-height: 1.55;
-  z-index: 1;
-}
-.lang {
-  opacity: 0;
-  transition: opacity 0.8s ease;
-}
-.lang.active {
-  opacity: 1;
-}
-.studio {
-  display: block;
-  margin-bottom: 3.5rem;
-  font-size: 1.1rem;
-  opacity: 0.45;
-  letter-spacing: 0.02em;
+  max-width: 640px;
 }
 
 /* --------------------
-   Language UI
+   Bottom image (IMPORTANT)
 -------------------- */
-.ui {
+#bottom-sticky {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  font-size: 18px;
-  letter-spacing: 0.18em;
-  color: rgba(60,60,60,0.65);
-  z-index: 5;
-}
-.ui span {
-  cursor: pointer;
-  opacity: 0.4;
-}
-.ui span:hover {
-  opacity: 1;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 0;
+
+  /* ★ 初期は必ず完全に画面外 */
+  transform: translateY(100%);
+  will-change: transform;
 }
 
-/* --------------------
-   Floating GIF
--------------------- */
-.mail-gif {
-  position: absolute;
-  pointer-events: auto;
-  opacity: 0;
-  transform: translateY(20px) scale(0.95);
-  transition: opacity 2.5s ease, transform 2.5s ease;
-  z-index: 4;
-}
-.mail-gif.is-visible {
-  opacity: 0.6;
-  transform: translateY(0) scale(1);
-}
-.mail-gif img {
-  width: 420px;
-  max-width: 70vw;
+#bottom-sticky img {
+  width: 100%;
   height: auto;
   display: block;
+  opacity: 0.6;
 }
 
-/* --------------------
-   Mobile
--------------------- */
+/* Mobile tweak */
 @media (max-width: 768px) {
-  .text {
-    padding: 2rem 1.5rem;
-    font-size: 1.6rem;
-  }
-  .studio {
-    margin-bottom: 2rem;
-    font-size: 0.95rem;
-  }
-  .ui {
-    font-size: 15px;
-    bottom: 1.8rem;
-    right: 1.5rem;
-  }
-  .mail-gif img {
-    width: 50vw;
-    max-width: 150px;
+  #bottom-sticky img {
+    height: 38vh;
+    object-fit: cover;
+    object-position: center bottom;
   }
 }
 </style>
 </head>
+
 <body>
 
-<div class="text" id="text">
-  <span class="studio">nat/yama — under construction</span>
-  <p class="lang en active">Berlin-based designer for cultural projects</p>
-  <p class="lang ja">nat/yamaは<br>コンセプト設計から表現まで手がける<br>アートディレクターです</p>
-  <p class="lang de">Kultur- und Mediengestalterin<br>für Bildungs- und Kontextprojekte</p>
+<div class="content">
+  <h1>Scroll down</h1>
+  <p>Bottom image should appear only at the very end.</p>
 </div>
 
-<div class="ui">
-  <span data-lang="en">EN</span> |
-  <span data-lang="ja">JP</span> |
-  <span data-lang="de">DE</span>
+<!-- Bottom image -->
+<div id="bottom-sticky">
+  <img src="svg/bottom-image.png" alt="">
 </div>
 
-<a href="mailto:n@natyama.com" class="mail-gif" aria-label="contact">
-  <img src="svg/email-animation.gif" alt="contact mail">
-</a>
-
 <script>
 /* --------------------
-   Language + Gradient
--------------------- */
-const langs=document.querySelectorAll('.lang');
-const text=document.getElementById('text');
-const buttons=document.querySelectorAll('.ui span');
-const bgGradients={en:['#e0f0ff','#e6edf3','#d6f3fb'],ja:['#fff7e6','#fff0cc','#ffe6b3'],de:['#f0fff0','#dfffe0','#cce6cc']};
-
-let currentLang = navigator.language.startsWith('ja')?'ja':navigator.language.startsWith('de')?'de':'en';
-
-function setLang(lang){
-  langs.forEach(l=>l.classList.remove('active'));
-  document.querySelector('.lang.'+lang).classList.add('active');
-  currentLang=lang;
-  const colors=bgGradients[lang];
-  document.body.style.background=`linear-gradient(135deg, ${colors.join(',')})`;
-  document.body.style.backgroundSize='400% 400%';
-  text.style.opacity=1;
-  text.style.filter='blur(0px)';
-}
-buttons.forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
-
-function animateGradient(){
-  const colors=bgGradients[currentLang];
-  document.body.style.background=`linear-gradient(135deg, ${colors[0]}, ${colors[1]})`;
-  document.body.style.backgroundSize='400% 400%';
-  setTimeout(animateGradient,5000);
-}
-setLang(currentLang);
-animateGradient();
-
-/* --------------------
-   Text scroll fade/blur
--------------------- */
-window.addEventListener('scroll', ()=>{
-  const t=Math.min(scrollY/400,1);
-  text.style.opacity=1-t;
-  text.style.filter=`blur(${t*6}px)`;
-});
-
-/* --------------------
-   Floating GIF
--------------------- */
-const mailGif=document.querySelector('.mail-gif');
-
-function randomPosition(el){
-  const vw=window.innerWidth;
-  const vh=window.innerHeight;
-  const rect=el.getBoundingClientRect();
-  const w=rect.width || 300;
-  const h=rect.height || 300;
-
-  const safeX = vw*0.2;
-  const safeY = vh*0.15;
-
-  const maxX = vw - w;
-  const maxY = vh - h;
-
-  const x = safeX + Math.random()*(maxX-safeX);
-  const y = safeY + Math.random()*(maxY-safeY);
-
-  el.style.left=`${x}px`;
-  el.style.top=`${y}px`;
-}
-
-function floatGif(el,interval=10000){
-  setInterval(()=>{
-    el.classList.remove('is-visible');
-    setTimeout(()=>{
-      randomPosition(el);
-      el.classList.add('is-visible');
-    },800);
-  },interval);
-}
-
-/* 初期表示はスクロール後 */
-let mailShown=false;
-window.addEventListener('scroll',()=>{
-  if(!mailShown && window.scrollY>30){
-    mailShown=true;
-    randomPosition(mailGif);
-    setTimeout(()=>mailGif.classList.add('is-visible'),500);
-    floatGif(mailGif,11000);
-  }
-});
-
-window.addEventListener('resize',()=>randomPosition(mailGif));
-</script>
-<script>
-const bgGradients = {
-  en: ['#e0f0ff','#e6edf3','#d6f3fb'],
-  ja: ['#fff7e6','#fff0cc','#ffe6b3'],
-  de: ['#f0fff0','#dfffe0','#cce6cc']
-};
-
-let currentLang = 'en';
-let progress = 0;
-let index = 0;
-
-// HEX→RGB簡易
-function hexToRgb(h){
-  return h.match(/\w\w/g).map(x=>parseInt(x,16));
-}
-
-// RGB→HEX簡易
-function rgbToHex(r,g,b){
-  return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
-}
-
-// 補間
-function lerp(a,b,t){ return a+(b-a)*t; }
-
-function animate(){
-  const colors = bgGradients[currentLang];
-  const c1 = hexToRgb(colors[index]);
-  const c2 = hexToRgb(colors[(index+1)%colors.length]);
-  const rgb = c1.map((v,i)=>lerp(v,c2[i],progress));
-
-  document.body.style.background = `linear-gradient(135deg, ${rgbToHex(...rgb)}, ${rgbToHex(...rgb)})`;
-
-  progress += 0.002; // ←速度調整
-  if(progress >= 1){
-    progress = 0;
-    index = (index+1)%colors.length;
-  }
-
-  requestAnimationFrame(animate);
-}
-
-// 言語切替
-function setLang(lang){
-  currentLang = lang;
-  index = 0;
-  progress = 0;
-}
-
-// 初期化
-animate();
-</script>
-   
-<script>
-/* --------------------
-   Bottom image scroll logic (final)
+   Bottom image scroll logic
 -------------------- */
 const bottomSticky = document.getElementById('bottom-sticky');
 const bottomImg = bottomSticky.querySelector('img');
@@ -302,7 +81,7 @@ let ready = false;
 
 function updateImageHeight() {
   imgHeight = bottomSticky.offsetHeight;
-  if (imgHeight > 0) ready = true;
+  ready = imgHeight > 0;
 }
 
 function updateBottomImage() {
@@ -320,36 +99,27 @@ function updateBottomImage() {
     return;
   }
 
-  let t = (scrollTop - appearStart) / (appearEnd - appearStart);
-  t = Math.max(0, Math.min(1, t));
+  const t = Math.min(
+    Math.max((scrollTop - appearStart) / (appearEnd - appearStart), 0),
+    1
+  );
 
-  bottomSticky.style.transform = `translateY(${(1 - t) * imgHeight}px)`;
+  bottomSticky.style.transform =
+    `translateY(${(1 - t) * imgHeight}px)`;
 }
 
-/* ★ 画像ロード後に初期化 */
+/* 画像ロード後に初期化 */
 bottomImg.onload = () => {
   updateImageHeight();
   updateBottomImage();
 };
 
+window.addEventListener('scroll', updateBottomImage);
 window.addEventListener('resize', () => {
   updateImageHeight();
   updateBottomImage();
 });
-
-window.addEventListener('scroll', updateBottomImage);
 </script>
-
-
-
-<div id="bottom-sticky">
-  <img src="svg/bottom-image.png" alt="">
-</div>
-const img = bottomSticky.querySelector('img');
-img.onload = () => {
-  updateImageHeight();
-  updateBottomImage();
-};
 
 </body>
 </html>
