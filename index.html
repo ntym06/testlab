@@ -15,17 +15,16 @@
 
 html, body {
   margin: 0;
-  min-height: 200vh; /* scroll space */
+  min-height: 200vh;
   font-family: Georgia, "Times New Roman", serif;
   color: #111;
 }
 
 /* --------------------
-   Background animation
+   Background
 -------------------- */
 body {
   background: linear-gradient(135deg, #e0f0ff, #e6edf3, #d6f3fb);
-  background-size: 400% 400%;
 }
 
 /* --------------------
@@ -36,43 +35,34 @@ body {
   inset: 0;
   padding: 4rem;
   pointer-events: none;
-  transition: opacity 0.6s ease, filter 0.6s ease;
-  color: rgba(60, 60, 60, 0.55);
+  color: rgba(60,60,60,.55);
   font-size: 1.5rem;
   line-height: 1.55;
   z-index: 2;
+  transition: opacity .6s, filter .6s;
 }
-
-.lang {
-  opacity: 0;
-  transition: opacity 0.8s ease;
-}
+.lang { opacity: 0; transition: opacity .8s; }
 .lang.active { opacity: 1; }
 
 .studio {
   display: block;
   margin-bottom: 3.5rem;
   font-size: 1.1rem;
-  opacity: 0.45;
-  letter-spacing: 0.02em;
+  opacity: .45;
 }
 
 /* --------------------
-   Language UI
+   UI
 -------------------- */
 .ui {
   position: fixed;
-  bottom: 2rem;
   right: 2rem;
-  font-size: 18px;
-  letter-spacing: 0.18em;
-  color: rgba(60,60,60,0.65);
+  bottom: 2rem;
+  letter-spacing: .18em;
+  color: rgba(60,60,60,.65);
   z-index: 5;
 }
-.ui span {
-  cursor: pointer;
-  opacity: 0.4;
-}
+.ui span { cursor: pointer; opacity: .4; }
 .ui span:hover { opacity: 1; }
 
 /* --------------------
@@ -80,69 +70,63 @@ body {
 -------------------- */
 .mail-gif {
   position: absolute;
-  pointer-events: auto;
   opacity: 0;
-  transform: translateY(20px) scale(0.95);
+  transform: translateY(20px) scale(.95);
   transition: opacity 2.5s ease, transform 2.5s ease;
   z-index: 4;
 }
 .mail-gif.is-visible {
-  opacity: 0.6;
+  opacity: .6;
   transform: translateY(0) scale(1);
 }
 .mail-gif img {
   width: 420px;
   max-width: 70vw;
-  height: auto;
-  display: block;
 }
-<div class="side-image">
-  <img src="svg/side-image.png" alt="">
-</div>
 
 /* --------------------
-   Bottom image (ADD ONLY)
+   Side fixed image
+-------------------- */
+.side-image {
+  position: fixed;
+  left: 3vw;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+.side-image img {
+  width: 220px;
+  max-width: 30vw;
+  opacity: .45;
+}
+
+/* --------------------
+   Bottom image
 -------------------- */
 #bottom-sticky {
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
+  transform: translateY(100%);
   pointer-events: none;
   z-index: 0;
-
-  /* 初期は完全に画面外 */
-  transform: translateY(100%);
   will-change: transform;
 }
 #bottom-sticky img {
   width: 100%;
-  height: auto;
-  display: block;
-  opacity: 0.55;
+  opacity: .55;
 }
 
 /* --------------------
    Mobile
 -------------------- */
 @media (max-width: 768px) {
-  .text {
-    padding: 2rem 1.5rem;
-    font-size: 1.6rem;
-  }
-  .studio {
-    margin-bottom: 2rem;
-    font-size: 0.95rem;
-  }
-  .ui {
-    font-size: 15px;
-    bottom: 1.8rem;
-    right: 1.5rem;
-  }
-  .mail-gif img {
-    width: 50vw;
-    max-width: 150px;
-  }
+  .text { padding: 2rem 1.5rem; font-size: 1.6rem; }
+  .ui { font-size: 15px; }
+  .mail-gif img { width: 50vw; max-width: 150px; }
+  .side-image { display: none; }
   #bottom-sticky img {
     height: 38vh;
     object-fit: cover;
@@ -157,15 +141,8 @@ body {
 <div class="text" id="text">
   <span class="studio">nat/yama — under construction</span>
   <p class="lang en active">Berlin-based designer for cultural projects</p>
-  <p class="lang ja">
-    nat/yamaは<br>
-    コンセプト設計から表現まで手がける<br>
-    アートディレクターです
-  </p>
-  <p class="lang de">
-    Kultur- und Mediengestalterin<br>
-    für Bildungs- und Kontextprojekte
-  </p>
+  <p class="lang ja">nat/yamaは<br>コンセプト設計から表現まで手がける<br>アートディレクターです</p>
+  <p class="lang de">Kultur- und Mediengestalterin<br>für Bildungs- und Kontextprojekte</p>
 </div>
 
 <div class="ui">
@@ -174,154 +151,91 @@ body {
   <span data-lang="de">DE</span>
 </div>
 
-<a href="mailto:n@natyama.com" class="mail-gif" id="mailGif" aria-label="contact">
-  <img src="svg/email-animation.gif" alt="contact mail">
+<a href="mailto:n@natyama.com" class="mail-gif" id="mailGif">
+  <img src="svg/email-animation.gif" alt="">
 </a>
 
-<!-- Bottom image -->
+<div class="side-image">
+  <img src="svg/side-image.png" alt="">
+</div>
+
 <div id="bottom-sticky">
   <img src="svg/bottom-image.png" alt="">
 </div>
 
 <script>
 /* --------------------
-   Language + background
+   Language
 -------------------- */
 const langs = document.querySelectorAll('.lang');
-const text = document.getElementById('text');
-const buttons = document.querySelectorAll('.ui span');
-
-const bgGradients = {
-  en: ['#e0f0ff','#e6edf3','#d6f3fb'],
-  ja: ['#fff7e6','#fff0cc','#ffe6b3'],
-  de: ['#f0fff0','#dfffe0','#cce6cc']
-};
-
-let currentLang =
-  navigator.language.startsWith('ja') ? 'ja' :
-  navigator.language.startsWith('de') ? 'de' : 'en';
-
-function setLang(lang){
-  langs.forEach(l => l.classList.remove('active'));
-  document.querySelector('.lang.' + lang).classList.add('active');
-  currentLang = lang;
-  text.style.opacity = 1;
-  text.style.filter = 'blur(0px)';
-}
-buttons.forEach(b => b.onclick = () => setLang(b.dataset.lang));
-setLang(currentLang);
-
-/* smooth background */
-let gi = 0, gp = 0;
-function lerp(a,b,t){ return a + (b-a)*t; }
-function hexToRgb(h){ return h.match(/\w\w/g).map(x=>parseInt(x,16)); }
-function rgbToHex(r,g,b){
-  return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
-}
-function animateBG(){
-  const c = bgGradients[currentLang];
-  const a = hexToRgb(c[gi]);
-  const b = hexToRgb(c[(gi+1)%c.length]);
-  const rgb = a.map((v,i)=>Math.round(lerp(v,b[i],gp)));
-  document.body.style.background =
-    `linear-gradient(135deg, ${rgbToHex(...rgb)}, ${c[(gi+2)%c.length]})`;
-  gp += 0.002;
-  if(gp>=1){ gp=0; gi=(gi+1)%c.length; }
-  requestAnimationFrame(animateBG);
-}
-animateBG();
+document.querySelectorAll('.ui span').forEach(b=>{
+  b.onclick=()=>{
+    langs.forEach(l=>l.classList.remove('active'));
+    document.querySelector('.'+b.dataset.lang).classList.add('active');
+  };
+});
 
 /* --------------------
    Text scroll fade
 -------------------- */
-window.addEventListener('scroll', ()=>{
-  const t = Math.min(window.scrollY/400,1);
-  text.style.opacity = 1 - t;
-  text.style.filter = `blur(${t*6}px)`;
+const text = document.getElementById('text');
+addEventListener('scroll',()=>{
+  const t=Math.min(scrollY/400,1);
+  text.style.opacity=1-t;
+  text.style.filter=`blur(${t*6}px)`;
 });
-
-<script>
-/* ====================
-   Floating GIF (RECOVER)
-==================== */
-const mailGif = document.getElementById('mailGif');
-let mailShown = false;
-
-function randomPositionAvoidText(el){
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const rect = el.getBoundingClientRect();
-  const w = rect.width || 300;
-  const h = rect.height || 300;
-
-  // テキストを避ける安全マージン
-  const safeLeft = vw * 0.25;
-  const safeTop  = vh * 0.15;
-
-  const maxX = vw - w;
-  const maxY = vh - h;
-
-  const x = safeLeft + Math.random() * Math.max(0, maxX - safeLeft);
-  const y = safeTop  + Math.random() * Math.max(0, maxY - safeTop);
-
-  el.style.left = `${x}px`;
-  el.style.top  = `${y}px`;
-}
-
-function floatLoop(el, interval = 11000){
-  setInterval(() => {
-    el.classList.remove('is-visible');
-    setTimeout(() => {
-      randomPositionAvoidText(el);
-      el.classList.add('is-visible');
-    }, 800);
-  }, interval);
-}
-
-window.addEventListener('scroll', () => {
-  if(!mailShown && window.scrollY > 30){
-    mailShown = true;
-    randomPositionAvoidText(mailGif);
-    setTimeout(() => mailGif.classList.add('is-visible'), 500);
-    floatLoop(mailGif, 11000);
-  }
-});
-
-window.addEventListener('resize', () => {
-  if(mailShown) randomPositionAvoidText(mailGif);
-});
-</script>
-
 
 /* --------------------
-   Bottom image scroll
+   Floating GIF loop
 -------------------- */
-const bottomSticky = document.getElementById('bottom-sticky');
-const bottomImg = bottomSticky.querySelector('img');
+const mailGif = document.getElementById('mailGif');
+let shown=false;
 
-let bh = 0, ready = false;
-
-function measureBottom(){
-  bh = bottomSticky.offsetHeight;
-  ready = bh > 0;
+function randomPos(el){
+  const vw=innerWidth, vh=innerHeight;
+  el.style.left=(vw*.25+Math.random()*vw*.6)+'px';
+  el.style.top =(vh*.15+Math.random()*vh*.6)+'px';
 }
-function updateBottom(){
-  if(!ready) return;
-  const y = window.scrollY;
-  const vh = window.innerHeight;
-  const dh = document.documentElement.scrollHeight;
-  const start = dh - vh*1.25;
-  const end   = dh - vh;
-  if(y < start){
-    bottomSticky.style.transform = `translateY(${bh}px)`;
-    return;
+
+function floatLoop(){
+  setInterval(()=>{
+    mailGif.classList.remove('is-visible');
+    setTimeout(()=>{
+      randomPos(mailGif);
+      mailGif.classList.add('is-visible');
+    },800);
+  },11000);
+}
+
+addEventListener('scroll',()=>{
+  if(!shown && scrollY>30){
+    shown=true;
+    randomPos(mailGif);
+    setTimeout(()=>mailGif.classList.add('is-visible'),500);
+    floatLoop();
   }
-  const t = Math.min(Math.max((y-start)/(end-start),0),1);
-  bottomSticky.style.transform = `translateY(${(1-t)*bh}px)`;
+});
+
+/* --------------------
+   Bottom scroll
+-------------------- */
+const bottom = document.getElementById('bottom-sticky');
+const img = bottom.querySelector('img');
+let h=0, ready=false;
+
+function measure(){ h=bottom.offsetHeight; ready=h>0; }
+function update(){
+  if(!ready) return;
+  const y=scrollY, vh=innerHeight, dh=document.documentElement.scrollHeight;
+  const start = innerWidth<768 ? dh-vh*1.1 : dh-vh*1.25;
+  const end   = dh-vh;
+  if(y<start){ bottom.style.transform=`translateY(${h}px)`; return; }
+  const t=Math.min(Math.max((y-start)/(end-start),0),1);
+  bottom.style.transform=`translateY(${(1-t)*h}px)`;
 }
-bottomImg.onload = ()=>{ measureBottom(); updateBottom(); };
-window.addEventListener('scroll', updateBottom);
-window.addEventListener('resize', ()=>{ measureBottom(); updateBottom(); });
+img.onload=()=>{measure();update();};
+addEventListener('scroll',update);
+addEventListener('resize',()=>{measure();update();});
 </script>
 
 </body>
