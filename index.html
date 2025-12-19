@@ -3,123 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bottom Sticky Test</title>
+<title>nat/yama — under construction</title>
 
 <style>
-/* --------------------
+/* ====================
    Base
--------------------- */
+==================== */
 html, body {
   margin: 0;
-  min-height: 200vh; /* スクロール用 */
+  min-height: 200vh;
   font-family: Georgia, "Times New Roman", serif;
+  color: #111;
 }
 
-/* --------------------
-   Dummy content
--------------------- */
-.content {
-  padding: 4rem;
-  max-width: 640px;
-}
-
-/* --------------------
-   Bottom image (IMPORTANT)
--------------------- */
-#bottom-sticky {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  pointer-events: none;
-  z-index: 0;
-
-  /* ★ 初期は必ず完全に画面外 */
-  transform: translateY(100%);
-  will-change: transform;
-}
-
-#bottom-sticky img {
-  width: 100%;
-  height: auto;
-  display: block;
-  opacity: 0.6;
-}
-
-/* Mobile tweak */
-@media (max-width: 768px) {
-  #bottom-sticky img {
-    height: 38vh;
-    object-fit: cover;
-    object-position: center bottom;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div class="content">
-  <h1>Scroll down</h1>
-  <p>Bottom image should appear only at the very end.</p>
-</div>
-
-<!-- Bottom image -->
-<div id="bottom-sticky">
-  <img src="svg/bottom-image.png" alt="">
-</div>
-
-<script>
-/* --------------------
-   Bottom image scroll logic
--------------------- */
-const bottomSticky = document.getElementById('bottom-sticky');
-const bottomImg = bottomSticky.querySelector('img');
-
-let imgHeight = 0;
-let ready = false;
-
-function updateImageHeight() {
-  imgHeight = bottomSticky.offsetHeight;
-  ready = imgHeight > 0;
-}
-
-function updateBottomImage() {
-  if (!ready) return;
-
-  const scrollTop = window.scrollY;
-  const winH = window.innerHeight;
-  const docH = document.documentElement.scrollHeight;
-
-  const appearStart = docH - winH * 1.25;
-  const appearEnd   = docH - winH;
-
-  if (scrollTop < appearStart) {
-    bottomSticky.style.transform = `translateY(${imgHeight}px)`;
-    return;
-  }
-
-  const t = Math.min(
-    Math.max((scrollTop - appearStart) / (appearEnd - appearStart), 0),
-    1
+/* ====================
+   Background
+==================== */
+body {
+  background: linear-gradient(
+    120deg,
+    #f6f4ef,
+    #e9edf1,
+    #f3ede8
   );
-
-  bottomSticky.style.transform =
-    `translateY(${(1 - t) * imgHeight}px)`;
+  background-size: 300% 300%;
+  animation: bgFlow 60s linear infinite;
 }
-
-/* 画像ロード後に初期化 */
-bottomImg.onload = () => {
-  updateImageHeight();
-  updateBottomImage();
-};
-
-window.addEventListener('scroll', updateBottomImage);
-window.addEventListener('resize', () => {
-  updateImageHeight();
-  updateBottomImage();
-});
-</script>
-
-</body>
-</html>
+@keyframes bg
