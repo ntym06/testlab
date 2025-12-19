@@ -293,17 +293,12 @@ animate();
 /* --------------------
    Bottom image scroll logic
 -------------------- */
-<script>
-/* --------------------
-   Bottom image scroll logic (px based)
--------------------- */
 const bottomSticky = document.getElementById('bottom-sticky');
-const bottomImg = bottomSticky.querySelector('img');
 
 let imgHeight = 0;
 
 function updateImageHeight() {
-  imgHeight = bottomSticky.getBoundingClientRect().height;
+  imgHeight = bottomSticky.offsetHeight;
 }
 
 function updateBottomImage() {
@@ -311,21 +306,19 @@ function updateBottomImage() {
   const winH = window.innerHeight;
   const docH = document.documentElement.scrollHeight;
 
-  // 出現開始：かなり下の方
-  const appearStart = docH - winH * 1.3;
-  // 完全に下
+  // 出現開始位置（かなり下）
+  const appearStart = docH - winH * 1.25;
+  // 完全到達
   const appearEnd = docH - winH;
 
   let t = (scrollTop - appearStart) / (appearEnd - appearStart);
   t = Math.max(0, Math.min(1, t));
 
-  // ★ pxで確実に「完全に画面外」から出す
+  // 下から押し上げる
   const translateY = (1 - t) * imgHeight;
-
   bottomSticky.style.transform = `translateY(${translateY}px)`;
 }
 
-// 初期化
 window.addEventListener('load', () => {
   updateImageHeight();
   updateBottomImage();
@@ -338,6 +331,7 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('scroll', updateBottomImage);
 </script>
+
 
 
 <div id="bottom-sticky">
