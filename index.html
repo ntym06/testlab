@@ -349,6 +349,11 @@ window.addEventListener('scroll', updateBottomImage);
 <div id="bottom-sticky">
   <img src="svg/bottom-image.png" alt="">
 </div>
+const img = bottomSticky.querySelector('img');
+img.onload = () => {
+  updateImageHeight();
+  updateBottomImage();
+};
 
 </body>
 </html>
